@@ -1,11 +1,55 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { FaUsers, FaHome, FaDollarSign, FaChartLine, FaArrowUp, FaArrowDown } from "react-icons/fa"
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { propertyApi } from "@/lib/api/property";
+import { userApi } from "@/lib/api/user";
+import { useEffect, useState } from "react";
+import {
+  FaUsers,
+  FaHome,
+  FaDollarSign,
+  FaChartLine,
+  FaArrowUp,
+  FaArrowDown,
+} from "react-icons/fa";
 
 export default function AdminDashboard() {
+  const [userCount, setUserCount] = useState(0);
+  const [propertyCount, setPropertyCount] = useState(0);
+
+  useEffect(() => {
+    fetchUsers();
+    fetchProperties();
+  }, []);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await userApi.usersList();
+      console.log("User count:", response.data.users.length);
+      setUserCount(response.data.users.length);
+      console.log("user name", response.data.users[0].firstName + " " + response.data.users[0].lastName);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const fetchProperties = async () => {
+    try {
+      const response = await propertyApi.search();
+      console.log("Property Stats:", response.data.properties.length);
+      // const sorted = response.data.properties.sort(
+      //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      // );
+      // console.log("Recent Property:", sorted[0].title);
+      setPropertyCount(response.data.properties.length);
+    } catch (error) {
+      console.error("Error fetching property stats:", error);
+    }
+  };
+
   const stats = [
     {
       title: "Total Users",
-      value: "1,234",
+      value: `${userCount}`,
       change: "+12%",
       trend: "up",
       icon: FaUsers,
@@ -13,7 +57,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Properties",
-      value: "856",
+      value: `${propertyCount}`,
       change: "+8%",
       trend: "up",
       icon: FaHome,
@@ -35,21 +79,48 @@ export default function AdminDashboard() {
       icon: FaChartLine,
       gradient: "gradient-warning",
     },
-  ]
+  ];
 
   const recentActivities = [
-    { id: 1, action: "New user registered", user: "John Doe", time: "2 minutes ago", type: "user" },
-    { id: 2, action: "Property listed", user: "Sarah Johnson", time: "5 minutes ago", type: "property" },
-    { id: 3, action: "Payment received", user: "Mike Wilson", time: "10 minutes ago", type: "payment" },
-    { id: 4, action: "Agent approved", user: "Emma Davis", time: "15 minutes ago", type: "agent" },
-  ]
+    {
+      id: 1,
+      action: "New user registered",
+      user: "John Doe",
+      time: "2 minutes ago",
+      type: "user",
+    },
+    {
+      id: 2,
+      action: "Property listed",
+      user: "Sarah Johnson",
+      time: "5 minutes ago",
+      type: "property",
+    },
+    {
+      id: 3,
+      action: "Payment received",
+      user: "Mike Wilson",
+      time: "10 minutes ago",
+      type: "payment",
+    },
+    {
+      id: 4,
+      action: "Agent approved",
+      user: "Emma Davis",
+      time: "15 minutes ago",
+      type: "agent",
+    },
+  ];
 
   return (
     <div className="space-y-8">
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat, index) => (
-          <Card key={index} className={`hover-lift ${stat.gradient} text-white overflow-hidden relative`}>
+          <Card
+            key={index}
+            className={`hover-lift ${stat.gradient} text-white overflow-hidden relative`}
+          >
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
@@ -89,10 +160,10 @@ export default function AdminDashboard() {
                       activity.type === "user"
                         ? "bg-green-500"
                         : activity.type === "property"
-                          ? "bg-blue-500"
-                          : activity.type === "payment"
-                            ? "bg-yellow-500"
-                            : "bg-purple-500"
+                        ? "bg-blue-500"
+                        : activity.type === "payment"
+                        ? "bg-yellow-500"
+                        : "bg-purple-500"
                     }`}
                   />
                   <div className="flex-1">
@@ -134,5 +205,5 @@ export default function AdminDashboard() {
         </Card>
       </div>
     </div>
-  )
+  );
 }

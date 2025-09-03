@@ -1,11 +1,50 @@
+"use client"
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { FaUsers, FaHome, FaDollarSign, FaChartLine, FaArrowUp, FaArrowDown } from "react-icons/fa"
+import { userApi } from "@/lib/api/user";
+import { propertyApi } from "@/lib/api/property";
+
+
 
 export default function AdminDashboard() {
+  const [userCount, setUserCount] = useState(0);
+  const [propertyCount, setPropertyCount] = useState(0);
+
+  useEffect(() => {
+     fetchUsers();
+     fetchProperties();
+   }, []);
+ 
+   const fetchUsers = async () => {
+     try {
+       const response = await userApi.usersList();
+       console.log("User count:", response.data.users.length);
+       setUserCount(response.data.users.length);
+       console.log("user name", response.data.users[0].firstName + " " + response.data.users[0].lastName);
+     } catch (error) {
+       console.error("Error fetching user data:", error);
+     }
+   };
+ 
+   const fetchProperties = async () => {
+     try {
+       const response = await propertyApi.search();
+       console.log("Property Stats:", response.data.properties.length);
+       // const sorted = response.data.properties.sort(
+       //   (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+       // );
+       // console.log("Recent Property:", sorted[0].title);
+       setPropertyCount(response.data.properties.length);
+     } catch (error) {
+       console.error("Error fetching property stats:", error);
+     }
+     }
+
   const stats = [
     {
       title: "Total Users",
-      value: "1,234",
+      value: `${userCount}`,
       change: "+12%",
       trend: "up",
       icon: FaUsers,
@@ -13,7 +52,7 @@ export default function AdminDashboard() {
     },
     {
       title: "Properties",
-      value: "856",
+      value: `${propertyCount}`,
       change: "+8%",
       trend: "up",
       icon: FaHome,

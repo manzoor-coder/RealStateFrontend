@@ -19,6 +19,7 @@ import { useEffect, useState } from "react";
 import { Property } from "@/types";
 import PropertyViewModal from "@/components/modals/PropertyViewModal";
 import PropertyDetail from "@/components/modals/PropertyDetail";
+import RealEstateHero from "@/components/home/real-estate-hero";
 
 export default function Page() {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -58,9 +59,10 @@ export default function Page() {
 
   return (
     <>
+    <RealEstateHero />
       {loading && <p className="text-center">Loading properties...</p>}
 
-      <div className="w-[90%] mt-5 mx-auto">
+      <div className="w-[90%] my-10 mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {properties.map((property) => (
             <Card

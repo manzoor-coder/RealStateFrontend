@@ -207,7 +207,7 @@ export default function AddUserModal({ isOpen, onClose, onAdd }: AddUserModalPro
                 {/* {formData.profilePhotos.length > 0 ? ( */}
                 {(formData.profilePhotos?.length ?? 0) > 0 ? (
                   <img
-                    src={`http://localhost:3010/uploads/${formData.profilePhotos![formData.profilePhotos!.length - 1]}`} // Use server URL for uploaded
+                    src={`http://localhost:3010/${formData.profilePhotos![formData.profilePhotos!.length - 1]}`} // Use server URL for uploaded
                     alt="Profile Preview"
                     className="w-full h-full object-cover"
                   />

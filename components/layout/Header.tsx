@@ -25,6 +25,14 @@ export default function Header() {
 
     const navItems = [
         {
+            id: "home",
+            label: "Home",
+            icon: FaHome,
+            href: "/",
+            color: "text-green-600",
+            hoverColor: "hover:bg-green-50 hover:text-green-700",
+        },
+        {
             id: "properties",
             label: "Properties",
             icon: FaHome,
@@ -37,8 +45,8 @@ export default function Header() {
             label: "Sell/Rent",
             icon: FaSellsy,
             href: "/sell-rent",
-            color: "text-green-600",
-            hoverColor: "hover:bg-green-50 hover:text-green-700",
+            color: "text-yellow-600",
+            hoverColor: "hover:bg-yellow-50 hover:text-yellow-700",
         },
         {
             id: "agents",

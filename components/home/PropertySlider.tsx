@@ -19,6 +19,11 @@ import {
 import propertiesData from "@/json/properties.json";
 import { propertyApi } from "@/lib/api/property";
 import { toast } from "react-toastify";
+import Link from "next/link";
+import PropertyViewModal from "../modals/PropertyViewModal";
+import { Property } from "@/types";
+
+
 
 interface PropertyCardProps {
   property: {
@@ -36,9 +41,18 @@ interface PropertyCardProps {
 }
 
 function PropertyCard({ property }: PropertyCardProps) {
-  console.log("Property in Card:", property);
+  // console.log("Property in Card:", property);
+  //  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  //  const [viewModalOpen, setViewModalOpen] = useState(false);
+
+  //  const handleViewProperty = (property: Property) => {
+  //          setSelectedProperty(property)
+  //          setViewModalOpen(true)
+  //      }
+
   return (
-    <Card className="group hover-lift overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white">
+    <>
+    <Card className="group hover-lift overflow-hidden pt-0 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white">
       <div className="relative">
         {/* <AutoImageSlider
           images={property.images}
@@ -127,12 +141,18 @@ function PropertyCard({ property }: PropertyCardProps) {
           </div>
         </div>
 
-        <Button className="w-full gradient-primary text-white hover:opacity-90 transition-all duration-300 shadow-lg">
+          {/* <Link href={'/properties'}>
+        <Button className="w-full gradient-primary text-white hover:opacity-90 transition-all duration-300 shadow-lg"
+        onClick={() => handleViewProperty(property)}
+        >
           <FaEye className="mr-2" />
           View Details
         </Button>
+        </Link> */}
       </CardContent>
     </Card>
+    {/* <PropertyViewModal property={selectedProperty} isOpen={viewModalOpen} onClose={() => setViewModalOpen(false)} /> */}
+    </>
   );
 }
 
@@ -233,12 +253,12 @@ export default function PropertiesSlider() {
           </Button>
 
           {/* Properties grid with smooth animation */}
-          <div className="overflow-hidden px-16">
+          <div className="overflow-hidden px-16 py-6">
             <div
               className="flex transition-transform duration-500 ease-in-out"
               style={{ transform: `translateX(-${currentSlide * 100}%)` }}
             >
-              {Array.from({ length: totalSlides }).map((_, slideIndex) => (
+              {Array.from({ length: Math.min(totalSlides, 3) }).map((_, slideIndex) => (
                 <div key={slideIndex} className="w-full flex-shrink-0">
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {data
@@ -278,7 +298,7 @@ export default function PropertiesSlider() {
 
           {/* Slide indicators */}
           <div className="flex justify-center space-x-2 mb-8 mt-12">
-            {Array.from({ length: totalSlides }).map((_, index) => (
+            {Array.from({ length: Math.min(totalSlides, 3) }).map((_, index) => (
               <button
                 key={index}
                 onClick={() => setCurrentSlide(index)}
@@ -294,11 +314,14 @@ export default function PropertiesSlider() {
 
         {/* View all button */}
         <div className="text-center">
-          <Button className="gradient-primary text-white px-8 py-3 text-lg hover:opacity-90 transition-all duration-300 shadow-gradient-blue">
-            View All Properties
-          </Button>
+          <Link href="/properties">
+            <Button className="gradient-primary text-white px-8 py-3 text-lg hover:opacity-90 transition-all duration-300 shadow-gradient-blue">
+              View All Properties
+            </Button>
+          </Link>
         </div>
       </div>
+      
     </section>
   );
 }

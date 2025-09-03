@@ -3,12 +3,14 @@ import PropertySlider from "@/components/home/PropertySlider";
 import ProjectsSection from "@/components/home/ProjectsSection";
 import AboutSection from "@/components/home/AboutSection";
 import CtaSection from "@/components/home/CtaSection";
+import RealEstateHero from "@/components/home/real-estate-hero";
 
 export default function HomeLayout() {
   return (
     <div className="min-h-screen">
       <div id="hero">
-        <HeroSection />
+        {/* <HeroSection /> */}
+        <RealEstateHero />
       </div>
       <div id="properties">
         <PropertySlider />

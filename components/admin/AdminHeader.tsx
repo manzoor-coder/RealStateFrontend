@@ -113,7 +113,7 @@ export default function AdminHeader({ isHeaderVisible, toggleHeader }: Dashboard
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50">
-                <Link href="/users/profile" className="flex items-center w-full">
+                <Link href="/user/profile" className="flex items-center w-full">
                   <FaUser className="mr-2 text-blue-500" />
                   Profile
                 </Link>

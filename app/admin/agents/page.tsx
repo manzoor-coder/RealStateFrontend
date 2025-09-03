@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -29,6 +29,7 @@ import agentsData from "@/json/agents.json"
 import EditAgentModal from "@/components/modals/AgentEditModal"
 import DeleteAgentModal from "@/components/modals/AgentDeleteModal"
 import AddAgentModal from "@/components/modals/NewAgentModal"
+import { userApi } from "@/lib/api/user"
 
 export default function AgentsPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -38,8 +39,25 @@ export default function AgentsPage() {
   const [editModalOpen, setEditModalOpen] = useState(false)
   const [deleteModalOpen, setDeleteModalOpen] = useState(false)
   const [addModalOpen, setAddModalOpen] = useState(false)
+  // const [agentsData, setAgentsData] = useState<any[]>([])
 
   const itemsPerPage = 6
+
+  useEffect(() => {
+    fetchAgents();
+  }, []);
+
+  const fetchAgents = async () => {
+    try {
+      const response = await userApi.usersList();
+      const agents =  response?.data?.users?.filter((user: any) => user.roles.includes(5));
+      console.log("Fetched agents:", agents);
+      // setAgentsData(agents)
+    } catch (error) {
+      console.error("Error fetching agents:", error);
+    }
+  }
+
 
   // Filter agents based on search and status
   const filteredAgents = agentsData.filter((agent) => {

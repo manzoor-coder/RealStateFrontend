@@ -62,8 +62,10 @@ const saveToStorage = (token: string, userData: User) => {
       const role = userData.roles[0];
       if (role === 1) {
         router.replace('/admin/dashboard');
-      } else {
+      } else if(role === 5) {
         router.replace('/dashboard');
+      }else if(role === 2) {
+        router.replace('/user-dashboard');
       }
 
       toast.success('Logged in successfully!');
@@ -101,7 +103,8 @@ const saveToStorage = (token: string, userData: User) => {
       localStorage.removeItem('user');
       setUser(null);
       toast.success('Logged out successfully!');
-      router.push('/auth/login');
+      // router.push('/auth/login');
+      router.push('/');
     } catch (error) {
       toast.error('Logout failed!');
     }

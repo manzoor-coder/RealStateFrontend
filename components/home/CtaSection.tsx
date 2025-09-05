@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 export default function CtaSection() {
     return (
         <>
-            <section className="py-20 bg-gradient-to-r from-blue-900 via-purple-900 to-indigo-900">
+            <section className="py-20 gradient-indigo">
                 <div className="container mx-auto px-4">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="gradient-secondary rounded-2xl p-8 text-white">

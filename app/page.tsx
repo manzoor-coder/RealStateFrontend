@@ -4,6 +4,7 @@ import ProjectsSection from "@/components/home/ProjectsSection";
 import AboutSection from "@/components/home/AboutSection";
 import CtaSection from "@/components/home/CtaSection";
 import RealEstateHero from "@/components/home/real-estate-hero";
+import { SellSection } from "@/components/home/SellSection";
 
 export default function HomeLayout() {
   return (
@@ -14,6 +15,9 @@ export default function HomeLayout() {
       </div>
       <div id="properties">
         <PropertySlider />
+      </div>
+      <div id="sell">
+        <SellSection />
       </div>
       <div id="projects">
         <ProjectsSection />

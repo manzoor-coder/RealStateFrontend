@@ -68,7 +68,7 @@ export default function ViewImagesModal({
         </DialogHeader>
 
         <div className="space-y-8 pt-6">
-          <div className="flex">
+          <div className="flex justify-center items-center">
             <div className="space-y-4">
               {/* First 2 images full width */}
               <div className="grid grid-cols-1 gap-4">
@@ -77,41 +77,27 @@ export default function ViewImagesModal({
                     key={`first-${index}`}
                     src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
                     alt={property.title}
-                    className="w-full h-[700px] object-cover "
+                    className="w-[100%] h-[700px] object-cover"
                   />
                 ))}
               </div>
 
               {/* Next 2 images side by side */}
-              <div className="grid grid-cols-2 gap-4">
-                {images.slice(1, 3).map((img: string, index: number) => (
+              <div
+                className={`${
+                  images.slice(1).length === 1
+                    ? "flex items-center justify-center w-full"
+                    : "grid grid-cols-2 gap-4"
+                }`}
+              >
+                {images.slice(1).map((img: string, index: number) => (
                   <img
-                    key={`second-${index}`}
+                    key={`img-${index + 1}`}
                     src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
                     alt={property.title}
-                    className="w-full h-[700px] object-cover "
-                  />
-                ))}
-              </div>
-              <div className="grid grid-cols-1 gap-4">
-                {images.slice(0, 1).map((img: string, index: number) => (
-                  <img
-                    key={`first-${index}`}
-                    src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
-                    alt={property.title}
-                    className="w-full h-[700px] object-cover "
-                  />
-                ))}
-              </div>
-
-              {/* Next 2 images side by side */}
-              <div className="grid grid-cols-2 gap-4">
-                {images.slice(1, 3).map((img: string, index: number) => (
-                  <img
-                    key={`second-${index}`}
-                    src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
-                    alt={property.title}
-                    className="w-full h-[700px] object-cover "
+                    className={`object-cover w-full h-[700px] ${
+                      images.slice(1).length === 1 ? "w-full" : ""
+                    }`}
                   />
                 ))}
               </div>

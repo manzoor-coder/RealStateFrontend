@@ -1,9 +1,9 @@
-"use client"
+"use client";
 
-import { useState, useRef, useEffect } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { ChevronDown, X, Search, SlidersHorizontal } from "lucide-react"
+import { useState, useRef, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { ChevronDown, X, Search, SlidersHorizontal } from "lucide-react";
 
 // Mock data for cities and their locations
 const cityData = {
@@ -53,13 +53,32 @@ const cityData = {
   ],
   Abbottabad: ["Mandian", "Supply Bazaar", "Jinnahabad", "PMA Kakul Road"],
   Attock: ["Attock City", "Hazro", "Jand", "Pindigheb"],
-}
+};
 
-const propertyTypes = ["Homes", "Houses", "Flats", "Plots", "Commercial", "Rooms", "Upper Portions", "Lower Portions"]
+const propertyTypes = [
+  "Homes",
+  "Houses",
+  "Flats",
+  "Plots",
+  "Commercial",
+  "Rooms",
+  "Villa",
+  "Apartment",
+  "Condo",
+  "Townhouse",
+  "Office",
+];
 
-const bedroomOptions = ["1+", "2+", "3+", "4+", "5+", "6+"]
+const bedroomOptions = ["1+", "2+", "3+", "4+", "5+", "6+"];
 
-const landTypeOptions = ["Marla", "Kanal", "Square Feet", "Square Yards", "Square Meters", "Acres"]
+const landTypeOptions = [
+  "Marla",
+  "Kanal",
+  "Square Feet",
+  "Square Yards",
+  "Square Meters",
+  "Acres",
+];
 
 const priceRanges = [
   "Any Price",
@@ -69,96 +88,157 @@ const priceRanges = [
   "2 Crore - 5 Crore",
   "5 Crore - 10 Crore",
   "Above 10 Crore",
-]
+];
 
-const areaRanges = [
-  "Any Area",
-  "Under 5 Marla",
-  "5 - 10 Marla",
-  "10 - 20 Marla",
-  "1 - 2 Kanal",
-  "2 - 5 Kanal",
-  "Above 5 Kanal",
-]
+
+
+const areaRangesByType: Record<string, string[]> = {
+  Marla: [
+    "Any Area",
+    "Under 5 Marla",
+    "5 - 10 Marla",
+    "10 - 20 Marla",
+    "Above 20 Marla",
+  ],
+  Kanal: [
+    "Any Area",
+    "Under 1 Kanal",
+    "1 - 2 Kanal",
+    "2 - 5 Kanal",
+    "Above 5 Kanal",
+  ],
+  "Square Feet": [
+    "Any Area",
+    "Under 500 Sq. Ft.",
+    "500 - 1000 Sq. Ft.",
+    "1000 - 2000 Sq. Ft.",
+    "Above 2000 Sq. Ft.",
+  ],
+  "Square Yards": [
+    "Any Area",
+    "Under 100 Sq. Yards",
+    "100 - 200 Sq. Yards",
+    "200 - 500 Sq. Yards",
+    "Above 500 Sq. Yards",
+  ],
+  "Square Meters": [
+    "Any Area",
+    "Under 100 Sq. Meters",
+    "100 - 200 Sq. Meters",
+    "200 - 500 Sq. Meters",
+    "Above 500 Sq. Meters",
+  ],
+  Acres: [
+    "Any Area",
+    "Under 1 Acre",
+    "1 - 5 Acres",
+    "5 - 10 Acres",
+    "Above 10 Acres",
+  ],
+};
 
 export default function RealEstateHero() {
-  const [activeTab, setActiveTab] = useState("Buy")
-  const [selectedCity, setSelectedCity] = useState("Lahore")
-  const [locationInput, setLocationInput] = useState("")
-  const [showCityDropdown, setShowCityDropdown] = useState(false)
-  const [showLocationDropdown, setShowLocationDropdown] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
-  const [selectedPropertyType, setSelectedPropertyType] = useState("Homes")
-  const [selectedBedrooms, setSelectedBedrooms] = useState("Bedrooms")
-  const [showPropertyDropdown, setShowPropertyDropdown] = useState(false)
-  const [showBedroomDropdown, setShowBedroomDropdown] = useState(false)
-  const [selectedLandType, setSelectedLandType] = useState("Marla")
-  const [showLandTypeDropdown, setShowLandTypeDropdown] = useState(false)
-  const [selectedPriceRange, setSelectedPriceRange] = useState("Any Price")
-  const [selectedAreaRange, setSelectedAreaRange] = useState("Any Area")
-  const [showPriceDropdown, setShowPriceDropdown] = useState(false)
-  const [showAreaDropdown, setShowAreaDropdown] = useState(false)
+  const [activeTab, setActiveTab] = useState("Buy");
+  const [selectedCity, setSelectedCity] = useState("Lahore");
+  const [locationInput, setLocationInput] = useState("");
+  const [showCityDropdown, setShowCityDropdown] = useState(false);
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+  const [showFilters, setShowFilters] = useState(false);
+  const [selectedPropertyType, setSelectedPropertyType] = useState("Homes");
+  const [selectedBedrooms, setSelectedBedrooms] = useState("Bedrooms");
+  const [showPropertyDropdown, setShowPropertyDropdown] = useState(false);
+  const [showBedroomDropdown, setShowBedroomDropdown] = useState(false);
+  const [selectedLandType, setSelectedLandType] = useState("Marla");
+  const [showLandTypeDropdown, setShowLandTypeDropdown] = useState(false);
+  const [selectedPriceRange, setSelectedPriceRange] = useState("Any Price");
+  const [selectedAreaRange, setSelectedAreaRange] = useState("Any Area");
+  const [showPriceDropdown, setShowPriceDropdown] = useState(false);
+  const [showAreaDropdown, setShowAreaDropdown] = useState(false);
 
-  const cityDropdownRef = useRef<HTMLDivElement>(null)
-  const locationDropdownRef = useRef<HTMLDivElement>(null)
-  const propertyDropdownRef = useRef<HTMLDivElement>(null)
-  const bedroomDropdownRef = useRef<HTMLDivElement>(null)
-  const landTypeDropdownRef = useRef<HTMLDivElement>(null)
-  const filtersRef = useRef<HTMLDivElement>(null)
-  const priceDropdownRef = useRef<HTMLDivElement>(null)
-  const areaDropdownRef = useRef<HTMLDivElement>(null)
+  const filteredAreaRanges = areaRangesByType[selectedLandType];
 
-  const cities = Object.keys(cityData)
-  const filteredLocations = cityData[selectedCity as keyof typeof cityData] || []
+  const cityDropdownRef = useRef<HTMLDivElement>(null);
+  const locationDropdownRef = useRef<HTMLDivElement>(null);
+  const propertyDropdownRef = useRef<HTMLDivElement>(null);
+  const bedroomDropdownRef = useRef<HTMLDivElement>(null);
+  const landTypeDropdownRef = useRef<HTMLDivElement>(null);
+  const filtersRef = useRef<HTMLDivElement>(null);
+  const priceDropdownRef = useRef<HTMLDivElement>(null);
+  const areaDropdownRef = useRef<HTMLDivElement>(null);
+
+  const cities = Object.keys(cityData);
+  const filteredLocations =
+    cityData[selectedCity as keyof typeof cityData] || [];
   const locationSuggestions = filteredLocations.filter((location) =>
-    location.toLowerCase().includes(locationInput.toLowerCase()),
-  )
+    location.toLowerCase().includes(locationInput.toLowerCase())
+  );
 
   // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (cityDropdownRef.current && !cityDropdownRef.current.contains(event.target as Node)) {
-        setShowCityDropdown(false)
+      if (
+        cityDropdownRef.current &&
+        !cityDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowCityDropdown(false);
       }
-      if (locationDropdownRef.current && !locationDropdownRef.current.contains(event.target as Node)) {
-        setShowLocationDropdown(false)
+      if (
+        locationDropdownRef.current &&
+        !locationDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowLocationDropdown(false);
       }
-      if (propertyDropdownRef.current && !propertyDropdownRef.current.contains(event.target as Node)) {
-        setShowPropertyDropdown(false)
+      if (
+        propertyDropdownRef.current &&
+        !propertyDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowPropertyDropdown(false);
       }
-      if (bedroomDropdownRef.current && !bedroomDropdownRef.current.contains(event.target as Node)) {
-        setShowBedroomDropdown(false)
+      if (
+        bedroomDropdownRef.current &&
+        !bedroomDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowBedroomDropdown(false);
       }
-      if (landTypeDropdownRef.current && !landTypeDropdownRef.current.contains(event.target as Node)) {
-        setShowLandTypeDropdown(false)
+      if (
+        landTypeDropdownRef.current &&
+        !landTypeDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowLandTypeDropdown(false);
       }
-      if (priceDropdownRef.current && !priceDropdownRef.current.contains(event.target as Node)) {
-        setShowPriceDropdown(false)
+      if (
+        priceDropdownRef.current &&
+        !priceDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowPriceDropdown(false);
       }
-      if (areaDropdownRef.current && !areaDropdownRef.current.contains(event.target as Node)) {
-        setShowAreaDropdown(false)
+      if (
+        areaDropdownRef.current &&
+        !areaDropdownRef.current.contains(event.target as Node)
+      ) {
+        setShowAreaDropdown(false);
       }
-    }
+    };
 
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => document.removeEventListener("mousedown", handleClickOutside)
-  }, [showFilters])
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [showFilters]);
 
   const handleCitySelect = (city: string) => {
-    setSelectedCity(city)
-    setLocationInput("")
-    setShowCityDropdown(false)
-  }
+    setSelectedCity(city);
+    setLocationInput("");
+    setShowCityDropdown(false);
+  };
 
   const handleLocationSelect = (location: string) => {
-    setLocationInput(location)
-    setShowLocationDropdown(false)
-  }
+    setLocationInput(location);
+    setShowLocationDropdown(false);
+  };
 
   const clearCity = () => {
-    setSelectedCity("")
-    setLocationInput("")
-  }
+    setSelectedCity("");
+    setLocationInput("");
+  };
 
   return (
     <div
@@ -191,7 +271,9 @@ export default function RealEstateHero() {
             <Button
               onClick={() => setActiveTab("Rent")}
               className={`px-8 py-3 rounded-r-none rounded-l-none font-medium ${
-                activeTab === "Rent" ? "gradient-hero text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                activeTab === "Rent"
+                  ? "gradient-hero text-white"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
               Rent
@@ -206,15 +288,17 @@ export default function RealEstateHero() {
                 className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
                 onClick={() => setShowCityDropdown(!showCityDropdown)}
               >
-                <span className={selectedCity ? "text-gray-900" : "text-gray-500"}>
+                <span
+                  className={selectedCity ? "text-gray-900" : "text-gray-500"}
+                >
                   {selectedCity || "Select City"}
                 </span>
                 {selectedCity ? (
                   <X
                     className="w-4 h-4 text-gray-400 hover:text-gray-600 mr-2"
                     onClick={(e) => {
-                      e.stopPropagation()
-                      clearCity()
+                      e.stopPropagation();
+                      clearCity();
                     }}
                   />
                 ) : (
@@ -223,7 +307,7 @@ export default function RealEstateHero() {
               </div>
 
               {showCityDropdown && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 max-h-60 overflow-y-auto">
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-51 max-h-60 overflow-y-auto">
                   {cities.map((city) => (
                     <div
                       key={city}
@@ -244,27 +328,29 @@ export default function RealEstateHero() {
                 placeholder="Locations"
                 value={locationInput}
                 onChange={(e) => {
-                  setLocationInput(e.target.value)
-                  setShowLocationDropdown(true)
+                  setLocationInput(e.target.value);
+                  setShowLocationDropdown(true);
                 }}
                 onFocus={() => setShowLocationDropdown(true)}
-                className="p-3 border-gray-300 h-[100%] focus:border-emerald-500 rounded-none focus:ring-emerald-500"
+                className="p-3 border-gray-300 h-[100%] focus:border-purple-500 rounded-none focus:ring-purple-500"
                 disabled={!selectedCity}
               />
 
-              {showLocationDropdown && selectedCity && locationSuggestions.length > 0 && (
-                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300  shadow-lg z-50 max-h-60 overflow-y-auto">
-                  {locationSuggestions.map((location) => (
-                    <div
-                      key={location}
-                      className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                      onClick={() => handleLocationSelect(location)}
-                    >
-                      {location}
-                    </div>
-                  ))}
-                </div>
-              )}
+              {showLocationDropdown &&
+                selectedCity &&
+                locationSuggestions.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300  shadow-lg z-51 max-h-60 overflow-y-auto">
+                    {locationSuggestions.map((location) => (
+                      <div
+                        key={location}
+                        className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                        onClick={() => handleLocationSelect(location)}
+                      >
+                        {location}
+                      </div>
+                    ))}
+                  </div>
+                )}
             </div>
 
             {/* Search Button */}
@@ -281,7 +367,11 @@ export default function RealEstateHero() {
             >
               <SlidersHorizontal className="w-4 h-4 mr-2" />
               More Filters
-              <ChevronDown className={`w-4 h-4 ml-2 transition-transform ${showFilters ? "rotate-180" : ""}`} />
+              <ChevronDown
+                className={`w-4 h-4 ml-2 transition-transform ${
+                  showFilters ? "rotate-180" : ""
+                }`}
+              />
             </Button>
           </div>
 
@@ -302,24 +392,32 @@ export default function RealEstateHero() {
                 <div className="relative flex-1" ref={propertyDropdownRef}>
                   <div
                     className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
-                    onClick={() => setShowPropertyDropdown(!showPropertyDropdown)}
+                    onClick={() =>
+                      setShowPropertyDropdown(!showPropertyDropdown)
+                    }
                   >
-                    <span className="text-gray-900">{selectedPropertyType}</span>
+                    <span className="text-gray-900">
+                      {selectedPropertyType}
+                    </span>
                     <ChevronDown className="w-4 h-4 text-gray-400" />
                   </div>
 
                   {showPropertyDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 max-h-60 overflow-y-auto">
-                      <div className="gradient-hero text-white p-3 font-medium">Property Type</div>
+                      <div className="gradient-hero text-white p-3 font-medium">
+                        Property Type
+                      </div>
                       {propertyTypes.map((type) => (
                         <div
                           key={type}
                           className={`p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 ${
-                            type === selectedPropertyType ? "bg-emerald-50 text-emerald-700" : ""
+                            type === selectedPropertyType
+                              ? "bg-emerald-50 text-emerald-700"
+                              : ""
                           }`}
                           onClick={() => {
-                            setSelectedPropertyType(type)
-                            setShowPropertyDropdown(false)
+                            setSelectedPropertyType(type);
+                            setShowPropertyDropdown(false);
                           }}
                         >
                           {type}
@@ -335,7 +433,13 @@ export default function RealEstateHero() {
                     className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
                     onClick={() => setShowBedroomDropdown(!showBedroomDropdown)}
                   >
-                    <span className={selectedBedrooms === "Bedrooms" ? "text-gray-500" : "text-gray-900"}>
+                    <span
+                      className={
+                        selectedBedrooms === "Bedrooms"
+                          ? "text-gray-500"
+                          : "text-gray-900"
+                      }
+                    >
                       {selectedBedrooms}
                     </span>
                     <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -343,14 +447,16 @@ export default function RealEstateHero() {
 
                   {showBedroomDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50">
-                      <div className="gradient-hero text-white p-3 font-medium">Bedrooms</div>
+                      <div className="gradient-hero text-white p-3 font-medium">
+                        Bedrooms
+                      </div>
                       {bedroomOptions.map((option) => (
                         <div
                           key={option}
                           className="p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                           onClick={() => {
-                            setSelectedBedrooms(option)
-                            setShowBedroomDropdown(false)
+                            setSelectedBedrooms(option);
+                            setShowBedroomDropdown(false);
                           }}
                         >
                           {option}
@@ -365,7 +471,13 @@ export default function RealEstateHero() {
                     className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
                     onClick={() => setShowPriceDropdown(!showPriceDropdown)}
                   >
-                    <span className={selectedPriceRange === "Any Price" ? "text-gray-500" : "text-gray-900"}>
+                    <span
+                      className={
+                        selectedPriceRange === "Any Price"
+                          ? "text-gray-500"
+                          : "text-gray-900"
+                      }
+                    >
                       {selectedPriceRange}
                     </span>
                     <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -373,16 +485,20 @@ export default function RealEstateHero() {
 
                   {showPriceDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50">
-                      <div className="gradient-hero text-white p-3 font-medium">Price Range</div>
+                      <div className="gradient-hero text-white p-3 font-medium">
+                        Price Range
+                      </div>
                       {priceRanges.map((range) => (
                         <div
                           key={range}
                           className={`p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 ${
-                            range === selectedPriceRange ? "bg-emerald-50 text-emerald-700" : ""
+                            range === selectedPriceRange
+                              ? "bg-emerald-50 text-emerald-700"
+                              : ""
                           }`}
                           onClick={() => {
-                            setSelectedPriceRange(range)
-                            setShowPriceDropdown(false)
+                            setSelectedPriceRange(range);
+                            setShowPriceDropdown(false);
                           }}
                         >
                           {range}
@@ -397,7 +513,13 @@ export default function RealEstateHero() {
                     className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
                     onClick={() => setShowAreaDropdown(!showAreaDropdown)}
                   >
-                    <span className={selectedAreaRange === "Any Area" ? "text-gray-500" : "text-gray-900"}>
+                    <span
+                      className={
+                        selectedAreaRange === "Any Area"
+                          ? "text-gray-500"
+                          : "text-gray-900"
+                      }
+                    >
                       {selectedAreaRange}
                     </span>
                     <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -405,16 +527,20 @@ export default function RealEstateHero() {
 
                   {showAreaDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50">
-                      <div className="gradient-hero text-white p-3 font-medium">Area Range</div>
-                      {areaRanges.map((range) => (
+                      <div className="gradient-hero text-white p-3 font-medium">
+                        Area Range
+                      </div>
+                      {filteredAreaRanges.map((range) => (
                         <div
                           key={range}
                           className={`p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 ${
-                            range === selectedAreaRange ? "bg-emerald-50 text-emerald-700" : ""
+                            range === selectedAreaRange
+                              ? "bg-emerald-50 text-emerald-700"
+                              : ""
                           }`}
                           onClick={() => {
-                            setSelectedAreaRange(range)
-                            setShowAreaDropdown(false)
+                            setSelectedAreaRange(range);
+                            setShowAreaDropdown(false);
                           }}
                         >
                           {range}
@@ -427,7 +553,9 @@ export default function RealEstateHero() {
                 <div className="relative flex-1" ref={landTypeDropdownRef}>
                   <div
                     className="flex items-center justify-between p-3 border border-gray-300 cursor-pointer bg-white hover:border-gray-400"
-                    onClick={() => setShowLandTypeDropdown(!showLandTypeDropdown)}
+                    onClick={() =>
+                      setShowLandTypeDropdown(!showLandTypeDropdown)
+                    }
                   >
                     <span className="text-gray-900">{selectedLandType}</span>
                     <ChevronDown className="w-4 h-4 text-gray-400" />
@@ -435,16 +563,20 @@ export default function RealEstateHero() {
 
                   {showLandTypeDropdown && (
                     <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-50 max-h-60 overflow-y-auto">
-                      <div className="bg-emerald-500 text-white p-3 font-medium">Land Type</div>
+                      <div className="gradient-hero text-white p-3 font-medium">
+                        Land Type
+                      </div>
                       {landTypeOptions.map((type) => (
                         <div
                           key={type}
                           className={`p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0 ${
-                            type === selectedLandType ? "bg-emerald-50 text-emerald-700" : ""
+                            type === selectedLandType
+                              ? "bg-emerald-50 text-emerald-700"
+                              : ""
                           }`}
                           onClick={() => {
-                            setSelectedLandType(type)
-                            setShowLandTypeDropdown(false)
+                            setSelectedLandType(type);
+                            setShowLandTypeDropdown(false);
                           }}
                         >
                           {type}
@@ -475,5 +607,5 @@ export default function RealEstateHero() {
         }
       `}</style>
     </div>
-  )
+  );
 }

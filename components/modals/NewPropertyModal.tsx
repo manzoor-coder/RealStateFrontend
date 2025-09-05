@@ -377,80 +377,6 @@ export default function AddPropertyModal({
           </Button>
         </DialogHeader>
 
-        {/* <div className="space-y-4 mt-4">
-          <h3 className="text-lg font-semibold text-blue-800">Property Images</h3>
-          {formData.images.length > 0 ? (
-            <>
-              <AutoImageSlider
-                images={formData.images.map((img) => ({
-                  src: `${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`,
-                  alt: formData.title || "Property Image"
-                }))}
-                height={200}
-                className="w-full rounded-lg"
-                interval={5000}
-              />
-              <div className="flex flex-wrap gap-4 mt-2">
-                {formData.images.map((img, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
-                      alt={`${formData.title || "Property"} Image ${index + 1}`}
-                      className="w-20 h-20 object-cover rounded-lg border border-gray-400 hover:border-gray-600"
-                    />
-                    <span
-                      className="absolute -top-1 -right-1 text-white rounded-full p-1 group-hover:scale-110 bg-red-400 border border-red-600 group-hover:bg-red-500 hover:bg-red-600 group-hover:border-red-800"
-                      onClick={() => handleRemoveImage(index)}
-                    >
-                      <FaTrash className="w-3 h-3 cursor-pointer" />
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p className="text-gray-500">No images uploaded yet.</p>
-          )}
-          <div className="space-y-2">
-            <Label htmlFor="imageUpload">Upload New Image</Label>
-            <div className="flex gap-2">
-              <Input
-                id="imageUpload"
-                type="file"
-                accept="image/*"
-                multiple
-                ref={fileInputRef}
-                onChange={handleImageUpload}
-                className="hidden"
-              />
-              <Button
-                type="button"
-                onClick={() => fileInputRef.current?.click()}
-                variant="outline"
-                className="flex items-center gap-2"
-              >
-                <FaPlus className="w-4 h-4" /> Upload Image
-              </Button>
-              {previewImage && (
-                <div className="relative">
-                  <img
-                    src={previewImage}
-                    alt="Preview"
-                    className="w-20 h-20 object-cover rounded-lg border border-gray-200"
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="absolute top-0 right-0 bg-red-500 text-white rounded-full w-5 h-5 p-0"
-                    onClick={() => setPreviewImage(null)}
-                  >
-                    <FaTrash className="w-3 h-3" />
-                  </Button>
-                </div>
-              )}
-            </div>
-          </div>
-        </div> */}
 
         <div className="space-y-4 mt-4">
           <h3 className="text-lg font-semibold text-blue-800">
@@ -479,7 +405,7 @@ export default function AddPropertyModal({
                     />
                     <span
                       className="absolute -top-1 -right-1 text-white rounded-full p-1 bg-red-400 border border-red-600 hover:bg-red-600 cursor-pointer"
-                      onClick={() => handleRemoveImage(index)}
+                      // onClick={() => handleRemoveImage(index)}
                     >
                       <FaTrash className="w-3 h-3" />
                     </span>
@@ -510,17 +436,6 @@ export default function AddPropertyModal({
               >
                 <FaPlus className="w-4 h-4" /> Choose Images
               </Button>
-
-              {/* Upload button (only if files selected) */}
-              {/* {selectedFiles.length > 0 && (
-        <Button
-          type="button"
-          onClick={handleUploadImages}
-          className="flex items-center gap-2 bg-blue-600 text-white"
-        >
-          <FaPlus className="w-4 h-4" /> Upload Selected
-        </Button>
-      )} */}
             </div>
 
             {/* Previews before uploading */}
@@ -956,24 +871,26 @@ export default function AddPropertyModal({
                   className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
                 />
               </div>
-              <div>
-                <Label
-                  htmlFor="rentPeriod"
-                  className="text-blue-700 font-medium"
-                >
-                  Rent Period
-                </Label>
-                <Input
-                  id="rentPeriod"
-                  name="rentPeriod"
-                  value={formData.rentPeriod}
-                  onChange={(e) =>
-                    handleInputChange("rentPeriod", e.target.value)
-                  }
-                  className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
-                  placeholder="e.g., Monthly, Yearly"
-                />
-              </div>
+              {formData.type === "rent" && (
+                <div>
+                  <Label
+                    htmlFor="rentPeriod"
+                    className="text-blue-700 font-medium"
+                  >
+                    Rent Period
+                  </Label>
+                  <Input
+                    id="rentPeriod"
+                    name="rentPeriod"
+                    value={formData.rentPeriod}
+                    onChange={(e) =>
+                      handleInputChange("rentPeriod", e.target.value)
+                    }
+                    className="border-blue-200 focus:border-blue-400 focus:ring-blue-400"
+                    placeholder="e.g., Monthly, Yearly"
+                  />
+                </div>
+              )}
             </div>
           </div>
 

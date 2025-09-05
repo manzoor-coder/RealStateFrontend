@@ -248,6 +248,10 @@
   background-position: right center;
 }
 
+.gradient-indigo {
+  background: linear-gradient(to right, #4c51bf, #805ad5, #6b46c1);
+}
+
 .gradient-purple {
   background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
 }

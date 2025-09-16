@@ -30,13 +30,13 @@ export default function RootLayout({
         className={` antialiased`}
       >
         <AuthProvider>
-          <Header />
+          {/* <Header /> */}
           <main>
             {children}
             <ToastContainer />
           </main>
-          <Footer />
-        </AuthProvider>
+          {/* <Footer /> */}
+        </AuthProvider>   
       </body>
     </html>
   );

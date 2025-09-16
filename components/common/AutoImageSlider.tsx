@@ -78,7 +78,7 @@ export default function AutoImageSlider({
       </button>
 
       {/* Dots Indicator */}
-      {images.length > 1 && (
+      {/* {images.length > 1 && (
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-10">
           {images.map((_, index) => (
             <button
@@ -91,7 +91,7 @@ export default function AutoImageSlider({
             />
           ))}
         </div>
-      )}
+      )} */}
     </div>
   )
 }

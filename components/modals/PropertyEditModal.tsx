@@ -49,6 +49,8 @@ export default function PropertyEditModal({
   const [newAmenity, setNewAmenity] = useState("");
   // const [users, setUsers] = useState<any[]>([]);
   // const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
+  const [localUser, setLocalUser] = useState("");
+  const [userRole, setUserRole] = useState();
 
   const [formData, setFormData] = useState<Partial<Property>>({
     title: "",
@@ -151,21 +153,16 @@ export default function PropertyEditModal({
     }
   }, [property]);
 
-  // useEffect(() => {
-  //   const fetchApprovedAgents = async () => {
-      
-  //     try {
-  //       const response = await userApi.usersList();
-  //       const filteredUsers = response?.data?.users?.filter((user: any) =>
-  //         user.roles?.includes(2)
-  //       ) || [];
-  //       setUsers(filteredUsers);
-  //     } catch (error) {
-  //       toast.error("error message", error);
-  //     }
-  //   };
-  //   fetchApprovedAgents();
-  // }, []);
+
+
+  useEffect(() => {
+    const userlocal = localStorage.getItem("user");
+    if (userlocal) {
+      const parsedUser = JSON.parse(userlocal);
+      setLocalUser(parsedUser?.id);
+      setUserRole(parsedUser?.roles?.[0]); // 👈 role store karo (array ka pehla element)
+    }
+  }, []);
 
   const handleInputChange = (field: string, value: any) => {
     setFormData((prev) => {
@@ -409,23 +406,28 @@ export default function PropertyEditModal({
                   </SelectContent>
                 </Select>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="status">Status</Label>
-                <Select
-                  value={formData.status}
-                  onValueChange={(value) => handleInputChange("status", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white">
-                    <SelectItem value="pending">Pending</SelectItem>
-                    <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="inactive">Inactive</SelectItem>
-                    <SelectItem value="rejected">Rejected</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+              {userRole === 1 && (
+                  <div className="space-y-2">
+                    <Label htmlFor="status">Status</Label>
+                    <Select
+                      value={formData.status}
+                      onValueChange={(value) =>
+                        handleInputChange("status", value)
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="pending">Pending</SelectItem>
+                        <SelectItem value="active">Active</SelectItem>
+                        <SelectItem value="inactive">Inactive</SelectItem>
+                        <SelectItem value="rejected">Rejected</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+
               <div className="space-y-2">
                 <Label htmlFor="propertyType">Property Type</Label>
                 <Select
@@ -635,58 +637,6 @@ export default function PropertyEditModal({
 
           <Separator />
 
-          {/* Select Agents */}
-          {/* <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900">Select Agents</h3>
-            <div className="space-y-2">
-              <div className="relative">
-                <Select
-                  onValueChange={(value) => handleAgentToggle(value)}
-                  value=""
-                >
-                  <SelectTrigger className="border-blue-200 focus:border-blue-400 focus:ring-blue-400 w-full">
-                    <SelectValue placeholder="Choose agents" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-white max-h-60 overflow-auto">
-                    {users.map((user) => (
-                      <div key={user._id} className="flex items-center px-2 py-1">
-                        <Checkbox
-                          checked={selectedAgents.includes(user._id)}
-                          onCheckedChange={() => handleAgentToggle(user._id)}
-                          className="mr-2"
-                        />
-                        <SelectItem value={user._id}>
-                          {user.firstName} {user.lastName}
-                        </SelectItem>
-                      </div>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              {selectedAgents.length > 0 && (
-                <div className="flex flex-wrap gap-2 mt-2">
-                  {selectedAgents.map((agentId) => {
-                    const agent = users.find((u) => u._id === agentId);
-                    return (
-                      <Badge
-                        key={agentId}
-                        variant="outline"
-                        className="px-3 py-2 gap-2 bg-blue-50 text-blue-600 border-blue-200 hover:bg-blue-100 hover:border-blue-400 hover:text-blue-800 transition-all"
-                      >
-                        {agent ? `${agent.firstName} ${agent.lastName}` : agentId}
-                        <span
-                          className="cursor-pointer text-red-300 hover:text-red-600"
-                          onClick={() => handleAgentToggle(agentId)}
-                        >
-                          <FaTrash className="text-sm" />
-                        </span>
-                      </Badge>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div> */}
 
           <Separator />
 

@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -10,7 +9,9 @@ import { Label } from "@/components/ui/label"
 import { Switch } from "@/components/ui/switch"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
-import { Camera, Save, Eye, EyeOff, Bell, Mail } from "lucide-react"
+import { Textarea } from "@/components/ui/textarea"
+import { Badge } from "@/components/ui/badge"
+import { Camera, Save, Eye, EyeOff, Bell, Shield, User, Settings, CheckCircle, AlertCircle } from "lucide-react"
 
 export function ProfileSettings() {
   const [profileData, setProfileData] = useState({
@@ -19,7 +20,9 @@ export function ProfileSettings() {
     phone: "+1 (555) 123-4567",
     avatar: "/placeholder.svg?height=100&width=100",
     company: "Real Estate Pro",
-    bio: "Experienced real estate professional with over 10 years in the industry.",
+    bio: "Experienced real estate professional with over 10 years in the industry, specializing in residential and commercial properties.",
+    title: "Senior Real Estate Agent",
+    license: "RE-12345678",
   })
 
   const [passwordData, setPasswordData] = useState({
@@ -35,12 +38,20 @@ export function ProfileSettings() {
     pushInquiries: true,
     pushViews: false,
     pushAnalytics: false,
+    marketingEmails: false,
+    weeklyReports: true,
   })
 
   const [showPasswords, setShowPasswords] = useState({
     current: false,
     new: false,
     confirm: false,
+  })
+
+  const [saveStates, setSaveStates] = useState({
+    profile: false,
+    password: false,
+    notifications: false,
   })
 
   const updateProfileData = (field: string, value: string) => {
@@ -55,12 +66,15 @@ export function ProfileSettings() {
     setNotifications((prev) => ({ ...prev, [field]: value }))
   }
 
-  const handleProfileSave = () => {
+  const handleProfileSave = async () => {
+    setSaveStates((prev) => ({ ...prev, profile: true }))
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     console.log("Profile saved:", profileData)
-    alert("Profile updated successfully!")
+    setSaveStates((prev) => ({ ...prev, profile: false }))
   }
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("New passwords don't match!")
       return
@@ -69,14 +83,25 @@ export function ProfileSettings() {
       alert("Password must be at least 8 characters long!")
       return
     }
+
+    setSaveStates((prev) => ({ ...prev, password: true }))
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     console.log("Password changed")
-    alert("Password changed successfully!")
-    setPasswordData({ currentPassword: "", newPassword: "", confirmPassword: "" })
+    setPasswordData({
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    })
+    setSaveStates((prev) => ({ ...prev, password: false }))
   }
 
-  const handleNotificationsSave = () => {
+  const handleNotificationsSave = async () => {
+    setSaveStates((prev) => ({ ...prev, notifications: true }))
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000))
     console.log("Notifications saved:", notifications)
-    alert("Notification preferences updated!")
+    setSaveStates((prev) => ({ ...prev, notifications: false }))
   }
 
   const handleAvatarUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -90,34 +115,54 @@ export function ProfileSettings() {
     }
   }
 
+  const getPasswordStrength = (password: string) => {
+    if (password.length < 6) return { strength: "weak", color: "destructive" }
+    if (password.length < 10) return { strength: "medium", color: "warning" }
+    return { strength: "strong", color: "success" }
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="max-w-6xl mx-auto space-y-8 p-6 animate-fade-in">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-foreground">Profile & Settings</h1>
-        <p className="text-muted-foreground">Manage your account settings and preferences</p>
+      <div className="border-b pb-6">
+        <h1 className="text-3xl font-bold gradient-text-primary mb-2 text-shadow">Account Settings</h1>
+        <p className="text-muted-foreground text-lg">Manage your professional profile and account preferences</p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        {/* Profile Information */}
+      <div className="grid gap-8 ">
+        {/* Profile Information - Takes 2 columns */}
         <div className="space-y-6">
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-card-foreground">Profile Information</CardTitle>
+          <Card className="shadow-gradient hover-lift">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-2">
+                <User className="h-5 w-5 text-primary" />
+                <CardTitle>Professional Profile</CardTitle>
+              </div>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6">
               {/* Avatar Upload */}
-              <div className="flex items-center gap-4">
-                <Avatar className="h-20 w-20">
-                  <AvatarImage src={profileData.avatar || "/placeholder.svg"} alt={profileData.name} />
-                  <AvatarFallback>
-                    {profileData.name
-                      .split(" ")
-                      .map((n) => n[0])
-                      .join("")}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
+              <div className="flex items-start gap-6">
+                <div className="relative">
+                  <Avatar className="h-24 w-24 border-4 border-transparent bg-gradient-primary p-1 shadow-lg">
+                    <div className="h-full w-full rounded-full overflow-hidden bg-background">
+                      <AvatarImage src={profileData.avatar || "/placeholder.svg"} alt={profileData.name} />
+                      <AvatarFallback className="text-lg font-semibold">
+                        {profileData.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </div>
+                  </Avatar>
+                  <Badge
+                    variant="secondary"
+                    className="absolute -bottom-2 -right-2 gradient-success text-gray-900 font-semibold border-0 shadow-gradient-teal"
+                  >
+                    <CheckCircle className="h-3 w-3 mr-1" />
+                    Verified
+                  </Badge>
+                </div>
+                <div className="flex-1">
                   <input
                     type="file"
                     id="avatar-upload"
@@ -126,281 +171,255 @@ export function ProfileSettings() {
                     className="hidden"
                   />
                   <label htmlFor="avatar-upload">
-                    <Button variant="outline" size="sm" className="cursor-pointer bg-transparent">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="cursor-pointer gradient-secondary text-gray-900 font-semibold border-0 hover-lift bg-transparent"
+                    >
                       <Camera className="h-4 w-4 mr-2" />
-                      Change Photo
+                      Update Photo
                     </Button>
                   </label>
-                  <p className="text-xs text-muted-foreground mt-1">JPG, PNG up to 2MB</p>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Professional headshot recommended. JPG or PNG, max 2MB
+                  </p>
                 </div>
               </div>
 
               <Separator />
 
-              {/* Personal Info */}
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
+              {/* Personal & Professional Info */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="name" className="text-sm font-medium">
+                    Full Name *
+                  </Label>
                   <Input
                     id="name"
                     value={profileData.name}
                     onChange={(e) => updateProfileData("name", e.target.value)}
+                    className="h-11"
                   />
                 </div>
-                <div>
-                  <Label htmlFor="company">Company</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="title" className="text-sm font-medium">
+                    Professional Title
+                  </Label>
+                  <Input
+                    id="title"
+                    value={profileData.title}
+                    onChange={(e) => updateProfileData("title", e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="company" className="text-sm font-medium">
+                    Company
+                  </Label>
                   <Input
                     id="company"
                     value={profileData.company}
                     onChange={(e) => updateProfileData("company", e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="license" className="text-sm font-medium">
+                    License Number
+                  </Label>
+                  <Input
+                    id="license"
+                    value={profileData.license}
+                    onChange={(e) => updateProfileData("license", e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+
+                 <div className="flex gap-6">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium">
+                    Email Address *
+                  </Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={profileData.email}
+                    onChange={(e) => updateProfileData("email", e.target.value)}
+                    className="h-11"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone" className="text-sm font-medium">
+                    Phone Number
+                  </Label>
+                  <Input
+                    id="phone"
+                    value={profileData.phone}
+                    onChange={(e) => updateProfileData("phone", e.target.value)}
+                    className="h-11"
                   />
                 </div>
               </div>
-
-              <div>
-                <Label htmlFor="email">Email Address</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={profileData.email}
-                  onChange={(e) => updateProfileData("email", e.target.value)}
-                />
               </div>
 
-              <div>
-                <Label htmlFor="phone">Phone Number</Label>
-                <Input
-                  id="phone"
-                  value={profileData.phone}
-                  onChange={(e) => updateProfileData("phone", e.target.value)}
-                />
-              </div>
+             
 
-              <div>
-                <Label htmlFor="bio">Bio</Label>
-                <Input
-                  id="bio"
-                  value={profileData.bio}
-                  onChange={(e) => updateProfileData("bio", e.target.value)}
-                  placeholder="Tell us about yourself..."
-                />
-              </div>
-
-              <Button onClick={handleProfileSave} className="w-full">
-                <Save className="h-4 w-4 mr-2" />
-                Save Profile
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Change Password */}
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-card-foreground">Change Password</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <Label htmlFor="currentPassword">Current Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="currentPassword" className="text-sm font-medium">
+                  Current Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="currentPassword"
                     type={showPasswords.current ? "text" : "password"}
                     value={passwordData.currentPassword}
                     onChange={(e) => updatePasswordData("currentPassword", e.target.value)}
+                    className="h-11 pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPasswords((prev) => ({ ...prev, current: !prev.current }))}
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        current: !prev.current,
+                      }))
+                    }
                   >
                     {showPasswords.current ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
               </div>
 
-              <div>
-                <Label htmlFor="newPassword">New Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="newPassword" className="text-sm font-medium">
+                  New Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="newPassword"
                     type={showPasswords.new ? "text" : "password"}
                     value={passwordData.newPassword}
                     onChange={(e) => updatePasswordData("newPassword", e.target.value)}
+                    className="h-11 pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPasswords((prev) => ({ ...prev, new: !prev.new }))}
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        new: !prev.new,
+                      }))
+                    }
                   >
                     {showPasswords.new ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
+                {passwordData.newPassword && (
+                  <div className="flex items-center gap-2 mt-1">
+                    <div
+                      className={`h-1 w-full rounded-full ${
+                        getPasswordStrength(passwordData.newPassword).strength === "weak"
+                          ? "bg-red-200"
+                          : getPasswordStrength(passwordData.newPassword).strength === "medium"
+                            ? "bg-yellow-200"
+                            : "bg-green-200"
+                      }`}
+                    >
+                      <div
+                        className={`h-full rounded-full transition-all ${
+                          getPasswordStrength(passwordData.newPassword).strength === "weak"
+                            ? "w-1/3 gradient-warning"
+                            : getPasswordStrength(passwordData.newPassword).strength === "medium"
+                              ? "w-2/3 gradient-warning"
+                              : "w-full gradient-success"
+                        }`}
+                      />
+                    </div>
+                    <span className="text-xs text-muted-foreground capitalize">
+                      {getPasswordStrength(passwordData.newPassword).strength}
+                    </span>
+                  </div>
+                )}
               </div>
 
-              <div>
-                <Label htmlFor="confirmPassword">Confirm New Password</Label>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-sm font-medium">
+                  Confirm New Password
+                </Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
                     type={showPasswords.confirm ? "text" : "password"}
                     value={passwordData.confirmPassword}
                     onChange={(e) => updatePasswordData("confirmPassword", e.target.value)}
+                    className="h-11 pr-10"
                   />
                   <Button
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="absolute right-0 top-0 h-full px-3"
-                    onClick={() => setShowPasswords((prev) => ({ ...prev, confirm: !prev.confirm }))}
+                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                    onClick={() =>
+                      setShowPasswords((prev) => ({
+                        ...prev,
+                        confirm: !prev.confirm,
+                      }))
+                    }
                   >
                     {showPasswords.confirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
                   </Button>
                 </div>
+                {passwordData.confirmPassword && passwordData.newPassword !== passwordData.confirmPassword && (
+                  <div className="flex items-center gap-1 text-red-600 text-xs">
+                    <AlertCircle className="h-3 w-3" />
+                    Passwords do not match
+                  </div>
+                )}
               </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="bio" className="text-sm font-medium">
+                  Professional Bio
+                </Label>
+                <Textarea
+                  id="bio"
+                  value={profileData.bio}
+                  onChange={(e) => updateProfileData("bio", e.target.value)}
+                  placeholder="Share your professional background, expertise, and what makes you unique..."
+                  className="min-h-[100px] resize-none"
+                />
+                <p className="text-xs text-muted-foreground">{profileData.bio.length}/500 characters</p>
+              </div>
+              
 
               <Button
-                onClick={handlePasswordChange}
-                className="w-full"
-                disabled={!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword}
+                onClick={handleProfileSave}
+                className="w-full h-11 gradient-primary text-white border-0 hover-lift shadow-gradient-blue"
+                disabled={saveStates.profile}
               >
-                Change Password
+                {saveStates.profile ? (
+                  <>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                    Saving Profile...
+                  </>
+                ) : (
+                  <>
+                    <Save className="h-4 w-4 mr-2" />
+                    Save Profile Changes
+                  </>
+                )}
               </Button>
             </CardContent>
           </Card>
+          
         </div>
 
-        {/* Notification Preferences */}
-        <div className="space-y-6">
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-card-foreground">Notification Preferences</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {/* Email Notifications */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Mail className="h-4 w-4 text-muted-foreground" />
-                  <h4 className="font-medium text-card-foreground">Email Notifications</h4>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">New Inquiries</p>
-                      <p className="text-xs text-muted-foreground">
-                        Get notified when someone inquires about your properties
-                      </p>
-                    </div>
-                    <Switch
-                      checked={notifications.emailInquiries}
-                      onCheckedChange={(checked) => updateNotification("emailInquiries", checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">Property Views</p>
-                      <p className="text-xs text-muted-foreground">Daily summary of property view counts</p>
-                    </div>
-                    <Switch
-                      checked={notifications.emailViews}
-                      onCheckedChange={(checked) => updateNotification("emailViews", checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">Analytics Reports</p>
-                      <p className="text-xs text-muted-foreground">Weekly performance and analytics reports</p>
-                    </div>
-                    <Switch
-                      checked={notifications.emailAnalytics}
-                      onCheckedChange={(checked) => updateNotification("emailAnalytics", checked)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <Separator />
-
-              {/* Push Notifications */}
-              <div>
-                <div className="flex items-center gap-2 mb-4">
-                  <Bell className="h-4 w-4 text-muted-foreground" />
-                  <h4 className="font-medium text-card-foreground">Push Notifications</h4>
-                </div>
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">New Inquiries</p>
-                      <p className="text-xs text-muted-foreground">Instant notifications for new messages</p>
-                    </div>
-                    <Switch
-                      checked={notifications.pushInquiries}
-                      onCheckedChange={(checked) => updateNotification("pushInquiries", checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">Property Views</p>
-                      <p className="text-xs text-muted-foreground">Notifications when properties get viewed</p>
-                    </div>
-                    <Switch
-                      checked={notifications.pushViews}
-                      onCheckedChange={(checked) => updateNotification("pushViews", checked)}
-                    />
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-sm font-medium text-card-foreground">Performance Alerts</p>
-                      <p className="text-xs text-muted-foreground">Alerts for significant performance changes</p>
-                    </div>
-                    <Switch
-                      checked={notifications.pushAnalytics}
-                      onCheckedChange={(checked) => updateNotification("pushAnalytics", checked)}
-                    />
-                  </div>
-                </div>
-              </div>
-
-              <Button onClick={handleNotificationsSave} className="w-full">
-                <Save className="h-4 w-4 mr-2" />
-                Save Preferences
-              </Button>
-            </CardContent>
-          </Card>
-
-          {/* Account Stats */}
-          <Card className="bg-card">
-            <CardHeader>
-              <CardTitle className="text-card-foreground">Account Overview</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-card-foreground">24</div>
-                  <div className="text-xs text-muted-foreground">Total Properties</div>
-                </div>
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-card-foreground">89</div>
-                  <div className="text-xs text-muted-foreground">Total Inquiries</div>
-                </div>
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-card-foreground">1,247</div>
-                  <div className="text-xs text-muted-foreground">Total Views</div>
-                </div>
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-card-foreground">7.8%</div>
-                  <div className="text-xs text-muted-foreground">Conversion Rate</div>
-                </div>
-              </div>
-              <div className="text-center pt-2">
-                <p className="text-xs text-muted-foreground">Member since January 2024</p>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </div>
   )

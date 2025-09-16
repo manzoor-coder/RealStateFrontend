@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Badge } from "@/components/ui/badge"
 import { FaHome, FaUser, FaBell, FaSignOutAlt, FaEyeSlash, FaEye, FaCog } from "react-icons/fa"
+import { useAuth } from "@/hooks/useAuth"
 
 interface DashboardHeaderProps {
   isHeaderVisible: boolean
@@ -18,6 +19,7 @@ export default function AdminHeader({ isHeaderVisible, toggleHeader }: Dashboard
     { id: 2, title: "Property listing pending approval", type: "warning" },
     { id: 3, title: "System maintenance scheduled", type: "info" },
   ])
+  const { logout } = useAuth()
 
   if (!isHeaderVisible) {
     return (
@@ -111,7 +113,7 @@ export default function AdminHeader({ isHeaderVisible, toggleHeader }: Dashboard
                 <FaUser className="text-blue-600 text-lg" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="bg-white">
               <DropdownMenuItem className="hover:bg-gradient-to-r hover:from-blue-50 hover:to-purple-50">
                 <Link href="/user/profile" className="flex items-center w-full">
                   <FaUser className="mr-2 text-blue-500" />
@@ -125,7 +127,9 @@ export default function AdminHeader({ isHeaderVisible, toggleHeader }: Dashboard
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="hover:bg-gradient-to-r hover:from-red-50 hover:to-pink-50 text-red-600">
-                <button className="flex items-center w-full">
+                <button className="flex items-center w-full" 
+                onClick={logout}
+                >
                   <FaSignOutAlt className="mr-2 text-red-500" />
                   Logout
                 </button>

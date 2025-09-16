@@ -60,13 +60,12 @@ const saveToStorage = (token: string, userData: User) => {
       saveToStorage(token, userData);
 
       const role = userData.roles[0];
-      if (role === 1) {
-        router.replace('/admin/dashboard');
-      } else if(role === 5) {
+      if (role === 1 || role === 2 || role === 5) {
         router.replace('/dashboard');
-      }else if(role === 2) {
-        router.replace('/user-dashboard');
-      }
+      } 
+      // else if(role === 2) {
+      //   router.replace('/user-dashboard');
+      // }
 
       toast.success('Logged in successfully!');
     } catch (error: any) {

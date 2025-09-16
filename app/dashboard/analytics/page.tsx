@@ -16,6 +16,10 @@ import {
   AreaChart,
 } from "recharts"
 import { TrendingUp, TrendingDown, Eye, MessageSquare, DollarSign, Calendar } from "lucide-react"
+import { useContext, useEffect, useState } from "react"
+import { propertyApi } from "@/lib/api/property"
+import { AuthContext } from "@/contexts/AuthContext"
+import { Property } from "@/types"
 
 // Sample analytics data
 const propertyViewsData = [
@@ -36,12 +40,6 @@ const performanceData = [
   { month: "Jun", rent: 65000, sale: 175000, views: 1247, inquiries: 89 },
 ]
 
-const propertyTypePerformance = [
-  { type: "Apartments", count: 12, avgViews: 145, avgInquiries: 8, color: "var(--chart-1)" },
-  { type: "Houses", count: 8, avgViews: 189, avgInquiries: 12, color: "var(--chart-2)" },
-  { type: "Condos", count: 4, avgViews: 234, avgInquiries: 15, color: "var(--chart-3)" },
-]
-
 const locationPerformance = [
   { location: "Downtown", properties: 8, avgPrice: 2800, performance: 92 },
   { location: "Suburbs", properties: 12, avgPrice: 2200, performance: 78 },
@@ -49,14 +47,61 @@ const locationPerformance = [
   { location: "Midtown", properties: 6, avgPrice: 3200, performance: 85 },
 ]
 
-export function AnalyticsDashboard() {
+export default function AnalyticsDashboard() {
+  const [propertyType, setPropertyType] = useState<Property[]>([]);
+  const { user } = useContext(AuthContext)!;
+
+  // Generate propertyTypePerformance dynamically
+  const propertyTypePerformance = propertyType.reduce((acc: { name: string; value: number; color: string }[], item, index) => {
+    const key = item.propertyType ?? "Unknown";
+    const existing = acc.find((entry) => entry.name === key);
+    if (existing) {
+      existing.value += 1;
+    } else {
+      acc.push({
+        name: key,
+        value: 1,
+        color: `var(--chart-${(index % 5) + 1})`, // Cycle through chart colors
+      });
+    }
+    return acc;
+  }, []);
+
+  const hasAdminRole = user?.roles?.some((role) => role === 1);
+  const hasUserRole = user?.roles?.some((role) => role === 2);
+  const hasAgentRole = user?.roles?.some((role) => role === 5);
+
+  const fetchProperties = async () => {
+    try {
+      const response = await propertyApi.search();
+      const allProperties = response.data.properties;
+
+      let filteredProperties = allProperties;
+      if (hasUserRole) {
+        filteredProperties = allProperties.filter(
+          (property) => property.ownerId === user?.id
+        );
+      }
+
+      console.log("User Property Stats:", filteredProperties.length);
+
+      setPropertyType(filteredProperties);
+    } catch (error) {
+      console.error("Error fetching property stats:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProperties();
+  }, []);
+
   return (
-    <div className="min-h-screen  p-6">
+    <div className="min-h-screen p-6">
       <div className="max-w-7xl mx-auto space-y-8 animate-fade-in">
         {/* Header */}
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold gradient-text-primary text-shadow-lg">Analytics & Insights Dashboard</h1>
-          <p className="text-lg ">
+          <p className="text-lg">
             Track your property performance and market trends with professional insights
           </p>
         </div>
@@ -245,7 +290,7 @@ export function AnalyticsDashboard() {
                       innerRadius={60}
                       outerRadius={100}
                       paddingAngle={5}
-                      dataKey="count"
+                      dataKey="value"
                     >
                       {propertyTypePerformance.map((entry, index) => (
                         <Cell key={`cell-${index}`} fill={entry.color} />
@@ -267,10 +312,10 @@ export function AnalyticsDashboard() {
                   <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                     <div className="flex items-center gap-3">
                       <div className="w-4 h-4 rounded-full shadow-sm" style={{ backgroundColor: item.color }} />
-                      <span className="text-sm font-medium text-card-foreground">{item.type}</span>
+                      <span className="text-sm font-medium text-card-foreground">{item.name}</span>
                     </div>
                     <div className="text-sm text-muted-foreground">
-                      {item.count} properties • {item.avgViews} avg views
+                      {item.value} properties
                     </div>
                   </div>
                 ))}

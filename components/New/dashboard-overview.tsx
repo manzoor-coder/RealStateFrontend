@@ -1,3 +1,4 @@
+"use client"
 import { cn } from "@/lib/utils"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2, Eye, MessageSquare, DollarSign, Home, TrendingUp } from "lucide-react"
@@ -23,6 +24,7 @@ const stats = [
     icon: Building2,
     change: "+2 this month",
     changeType: "positive",
+    gradient: "gradient-primary"
   },
   {
     title: "Active Listings",
@@ -30,6 +32,7 @@ const stats = [
     icon: Home,
     change: "+3 this week",
     changeType: "positive",
+    gradient: "gradient-secondary"
   },
   {
     title: "Properties on Rent",
@@ -37,6 +40,7 @@ const stats = [
     icon: DollarSign,
     change: "+1 this month",
     changeType: "positive",
+    gradient: "gradient-success"
   },
   {
     title: "Properties for Sale",
@@ -44,6 +48,7 @@ const stats = [
     icon: TrendingUp,
     change: "No change",
     changeType: "neutral",
+    gradient: "gradient-warning",
   },
   {
     title: "Total Views",
@@ -51,6 +56,7 @@ const stats = [
     icon: Eye,
     change: "+156 this week",
     changeType: "positive",
+    gradient: "gradient-success",
   },
   {
     title: "Total Inquiries",
@@ -58,6 +64,7 @@ const stats = [
     icon: MessageSquare,
     change: "+12 this week",
     changeType: "positive",
+    gradient: "gradient-warning",
   },
 ]
 
@@ -80,9 +87,9 @@ const inquiriesData = [
 ]
 
 const propertyTypeData = [
-  { name: "Apartments", value: 12, color: "hsl(var(--chart-1))" },
-  { name: "Houses", value: 8, color: "hsl(var(--chart-2))" },
-  { name: "Condos", value: 4, color: "hsl(var(--chart-3))" },
+  { name: "Apartments", value: 12, color: "var(--chart-1)" },
+  { name: "Houses", value: 8, color: "var(--chart-2)" },
+  { name: "Condos", value: 4, color: "var(--chart-3)" },
 ]
 
 const recentActivities = [
@@ -124,7 +131,8 @@ export function DashboardOverview() {
       {/* Stats Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {stats.map((stat) => (
-          <Card key={stat.title} className="bg-card">
+          <Card key={stat.title} 
+          className={`bg-card ${stat.gradient}`}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-card-foreground">{stat.title}</CardTitle>
               <stat.icon className="h-4 w-4 text-muted-foreground" />
@@ -158,22 +166,22 @@ export function DashboardOverview() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={viewsData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
+                      backgroundColor: "var(--card)",
+                      border: "1px solid var(--border)",
                       borderRadius: "6px",
                     }}
                   />
                   <Line
                     type="monotone"
                     dataKey="views"
-                    stroke="hsl(var(--primary))"
+                    stroke="var(--primary)"
                     strokeWidth={2}
-                    dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 4 }}
+                    dot={{ fill: "var(--primary)", strokeWidth: 2, r: 4 }}
                   />
                 </LineChart>
               </ResponsiveContainer>
@@ -191,17 +199,17 @@ export function DashboardOverview() {
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={inquiriesData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                  <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                  <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                  <XAxis dataKey="month" stroke="var(--muted-foreground)" fontSize={12} />
+                  <YAxis stroke="var(--muted-foreground)" fontSize={12} />
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
+                      backgroundColor: "var(--card)",
+                      border: "1px solid var(--border)",
                       borderRadius: "6px",
                     }}
                   />
-                  <Bar dataKey="inquiries" fill="hsl(var(--secondary))" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="inquiries" fill="var(--accent-foreground)" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -214,8 +222,8 @@ export function DashboardOverview() {
         {/* Property Type Distribution */}
         <Card className="bg-card">
           <CardHeader>
-            <CardTitle className="text-card-foreground">Property Distribution</CardTitle>
-            <p className="text-sm text-muted-foreground">Breakdown by property type</p>
+            <CardTitle className="color-foreground">Property Distribution</CardTitle>
+            <p className="text-sm color-muted-foreground">Breakdown by property type</p>
           </CardHeader>
           <CardContent>
             <div className="h-64">
@@ -236,8 +244,8 @@ export function DashboardOverview() {
                   </Pie>
                   <Tooltip
                     contentStyle={{
-                      backgroundColor: "hsl(var(--card))",
-                      border: "1px solid hsl(var(--border))",
+                      backgroundColor: "var(--card)",
+                      border: "1px solid var(--border)",
                       borderRadius: "6px",
                     }}
                   />

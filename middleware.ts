@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/admin/dashboard", "/sell-rent"];
+const protectedRoutes = ["/dashboard", "/sell-rent"];
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("token")?.value;
@@ -19,7 +19,7 @@ export function middleware(request: NextRequest) {
   // If user is on login/register but already logged in
   if ((request.nextUrl.pathname.startsWith("/auth/login") || request.nextUrl.pathname.startsWith("/auth/register")) && token) {
     // Redirect to appropriate dashboard (assume default; enhance with role check if needed)
-    // return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   return NextResponse.next();

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -27,6 +27,7 @@ import AutoImageSlider from "../common/AutoImageSlider";
 import { Badge } from "../ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import { userApi } from "@/lib/api/user";
+import { AuthContext } from "@/contexts/AuthContext";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -80,6 +81,10 @@ export default function AddPropertyModal({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [previewImages, setPreviewImages] = useState<string[]>([]);
   // const [test, setTest] = useState<string[]>([]);
+  const authContext = useContext(AuthContext);
+    const user = authContext?.user;
+  
+    // console.log("user id is", user?.id);
 
   console.log("images selected, ", selectedFiles);
   // console.log("Test data images", test);
@@ -274,7 +279,7 @@ export default function AddPropertyModal({
               formDataToUpload.get("availableFrom") as string
             ).toISOString()
           : undefined,
-        ownerId: localStorage.getItem("userId") || "current-user-id",
+        ownerId: user?.id || "current-user-id",
         agents: selectedAgents,
         amenities: formDataToUpload.getAll("amenities") as string[],
         ...(formDataToUpload.get("latitude") &&
@@ -294,9 +299,8 @@ export default function AddPropertyModal({
       // Append property JSON as string
       formDataToUpload.append("data", JSON.stringify(propertyData));
 
-      console.log("Form Data to Upload:", [...formDataToUpload.entries()]);
-      // ✅ send everything in one API call
-      // await propertyApi.create(formDataToUpload);
+      // console.log("Form Data to Upload:", [...formDataToUpload.entries()]);
+
       onAdd(formDataToUpload as unknown as AddProperty);
       // Reset state
       setSelectedFiles([]);
@@ -337,7 +341,7 @@ export default function AddPropertyModal({
       setPreviewImage(null);
       onClose();
 
-      toast.success("Property added successfully!");
+      // toast.success("Property added successfully!");
     } catch (error: any) {
       console.error("Failed to add property:", error);
       toast.error(`Failed to add property: ${error.message}`);

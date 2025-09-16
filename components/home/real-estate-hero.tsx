@@ -4,6 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ChevronDown, X, Search, SlidersHorizontal } from "lucide-react";
+import { propertyApi } from "@/lib/api/property";
+import { useRouter, usePathname } from "next/navigation";
 
 // Mock data for cities and their locations
 const cityData = {
@@ -56,17 +58,13 @@ const cityData = {
 };
 
 const propertyTypes = [
-  "Homes",
-  "Houses",
-  "Flats",
-  "Plots",
-  "Commercial",
-  "Rooms",
-  "Villa",
   "Apartment",
+  "House",
+  "Villa",
   "Condo",
   "Townhouse",
   "Office",
+  "Retail",
 ];
 
 const bedroomOptions = ["1+", "2+", "3+", "4+", "5+", "6+"];
@@ -82,15 +80,13 @@ const landTypeOptions = [
 
 const priceRanges = [
   "Any Price",
-  "Under 50 Lakh",
-  "50 Lakh - 1 Crore",
-  "1 Crore - 2 Crore",
-  "2 Crore - 5 Crore",
-  "5 Crore - 10 Crore",
-  "Above 10 Crore",
+  "Under 50000 USD",
+  "50000 - 100000 USD",
+  "100000 - 200000 USD",
+  "200000 - 300000 USD",
+  "300000 - 500000 USD",
+  "Above 500000 USD",
 ];
-
-
 
 const areaRangesByType: Record<string, string[]> = {
   Marla: [
@@ -137,9 +133,29 @@ const areaRangesByType: Record<string, string[]> = {
   ],
 };
 
-export default function RealEstateHero() {
-  const [activeTab, setActiveTab] = useState("Buy");
-  const [selectedCity, setSelectedCity] = useState("Lahore");
+// Fallback buildQuery function in case the imported one is faulty
+const buildQuery = (params: Record<string, any>) => {
+  const query = Object.entries(params)
+    .filter(
+      ([_, value]) => value !== undefined && value !== null && value !== ""
+    )
+    .map(
+      ([key, value]) =>
+        `${encodeURIComponent(key)}=${encodeURIComponent(value)}`
+    )
+    .join("&");
+  return query;
+};
+
+interface RealEstateHeroProps {
+  setPropertiesFilter: (properties: any[]) => void;
+}
+
+export default function RealEstateHero({
+  setPropertiesFilter,
+}: RealEstateHeroProps) {
+  const [activeTab, setActiveTab] = useState("");
+  const [selectedCity, setSelectedCity] = useState("");
   const [locationInput, setLocationInput] = useState("");
   const [showCityDropdown, setShowCityDropdown] = useState(false);
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
@@ -166,12 +182,150 @@ export default function RealEstateHero() {
   const priceDropdownRef = useRef<HTMLDivElement>(null);
   const areaDropdownRef = useRef<HTMLDivElement>(null);
 
+  const router = useRouter();
+  const pathname = usePathname();
+  const redirectedRef = useRef(false);
+
   const cities = Object.keys(cityData);
   const filteredLocations =
     cityData[selectedCity as keyof typeof cityData] || [];
   const locationSuggestions = filteredLocations.filter((location) =>
     location.toLowerCase().includes(locationInput.toLowerCase())
   );
+
+  // Parse price range into numbers
+  const parsePriceRange = (range: string) => {
+    if (range === "Any Price") return { min: undefined, max: undefined };
+
+    if (range.startsWith("Under")) {
+      const value = parseInt(range.replace(/\D/g, ""));
+      return { min: 0, max: value };
+    }
+
+    if (range.startsWith("Above")) {
+      const value = parseInt(range.replace(/\D/g, ""));
+      return { min: value, max: undefined };
+    }
+
+    if (range.includes("-")) {
+      const nums = range.match(/\d+/g);
+      if (nums && nums.length === 2) {
+        return { min: parseInt(nums[0]), max: parseInt(nums[1]) };
+      }
+    }
+
+    return { min: undefined, max: undefined };
+  };
+
+  // Parse area range into numbers
+  const parseAreaRange = (range: string, landType: string) => {
+    if (range === "Any Area") return { min: undefined, max: undefined };
+
+    if (range.startsWith("Under")) {
+      const value = parseInt(range.replace(/\D/g, ""));
+      return { min: 0, max: value };
+    }
+
+    if (range.startsWith("Above")) {
+      const value = parseInt(range.replace(/\D/g, ""));
+      return { min: value, max: undefined };
+    }
+
+    if (range.includes("-")) {
+      const nums = range.match(/\d+/g);
+      if (nums && nums.length >= 2) {
+        return { min: parseInt(nums[0]), max: parseInt(nums[1]) };
+      }
+    }
+
+    return { min: undefined, max: undefined };
+  };
+
+  const buildFilters = () => {
+    const priceRange = parsePriceRange(selectedPriceRange);
+    const areaRange = parseAreaRange(selectedAreaRange, selectedLandType);
+
+    return {
+      type: activeTab.toLowerCase(),
+      city: selectedCity || undefined,
+      address: locationInput || undefined,
+      propertyType:
+        selectedPropertyType !== "Homes" ? selectedPropertyType : undefined,
+      bedrooms:
+        selectedBedrooms !== "Bedrooms"
+          ? parseInt(selectedBedrooms)
+          : undefined,
+      price: `${priceRange.min}-${priceRange.max}`,
+      area: `${areaRange.min}-${areaRange.max}`,
+      // landType: selectedLandType !== "Marla" ? selectedLandType : undefined,
+    };
+  };
+
+  useEffect(() => {
+    const fetchFilteredProperties = async () => {
+      const filters = buildFilters();
+      console.log("Auto filter triggered:", filters);
+
+      try {
+        if (pathname === "/properties") {
+          const res = await propertyApi.filter(filters);
+          console.log("API response:", res.data);
+          setPropertiesFilter(res.data || []);
+        }
+      } catch (error: any) {
+        console.error("Error fetching filtered properties:", {
+          message: error.message,
+          status: error.response?.status,
+          data: error.response?.data,
+          config: error.config,
+        });
+        setPropertiesFilter([]);
+      }
+    };
+
+    if (pathname === "/properties") {
+      fetchFilteredProperties();
+    }
+  }, [
+    selectedCity,
+    locationInput,
+    selectedPropertyType,
+    selectedBedrooms,
+    selectedPriceRange,
+    selectedAreaRange,
+    selectedLandType,
+    activeTab,
+    pathname,
+  ]);
+
+  const handleSearch = async () => {
+    const priceRange = parsePriceRange(selectedPriceRange);
+    const areaRange = parseAreaRange(selectedAreaRange, selectedLandType);
+
+    const filters = {
+      type: activeTab.toLowerCase(),
+      city: selectedCity || undefined,
+      address: locationInput || undefined,
+      propertyType:
+        selectedPropertyType !== "Homes" ? selectedPropertyType : undefined,
+      bedrooms:
+        selectedBedrooms !== "Bedrooms"
+          ? parseInt(selectedBedrooms)
+          : undefined,
+      priceMin: priceRange.min,
+      priceMax: priceRange.max,
+      areaMin: areaRange.min,
+      areaMax: areaRange.max,
+    };
+
+    console.log("Selected filters:", filters);
+
+    const queryString = buildQuery(filters);
+    console.log("Constructed query string:", queryString);
+
+    // ✅ Redirect with filters
+    router.push(`/properties?${queryString}`);
+  };
 
   // Close dropdowns when clicking outside
   useEffect(() => {
@@ -222,7 +376,7 @@ export default function RealEstateHero() {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showFilters]);
+  }, []);
 
   const handleCitySelect = (city: string) => {
     setSelectedCity(city);
@@ -255,13 +409,23 @@ export default function RealEstateHero() {
         </h1>
 
         {/* Search Container */}
-        <div className="w-full max-w-6xl bg-white  shadow-2xl p-6 relative">
+        <div className="w-full max-w-6xl bg-white shadow-2xl p-6 relative">
           {/* Buy/Rent Tabs */}
           <div className="flex">
             <Button
-              onClick={() => setActiveTab("Buy")}
+              onClick={() => setActiveTab("")}
               className={`px-8 py-3 rounded-l-none rounded-r-none font-medium ${
-                activeTab === "Buy"
+                activeTab === ""
+                  ? "gradient-hero text-white hover:bg-emerald-600"
+                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+              }`}
+            >
+              All
+            </Button>
+            <Button
+              onClick={() => setActiveTab("sale")}
+              className={`px-8 py-3 rounded-l-none rounded-r-none font-medium ${
+                activeTab === "sale"
                   ? "gradient-hero text-white hover:bg-emerald-600"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
@@ -339,7 +503,7 @@ export default function RealEstateHero() {
               {showLocationDropdown &&
                 selectedCity &&
                 locationSuggestions.length > 0 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300  shadow-lg z-51 max-h-60 overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-300 shadow-lg z-51 max-h-60 overflow-y-auto">
                     {locationSuggestions.map((location) => (
                       <div
                         key={location}
@@ -354,7 +518,10 @@ export default function RealEstateHero() {
             </div>
 
             {/* Search Button */}
-            <Button className="px-8 py-4 rounded-none h-full gradient-hero text-white font-medium">
+            <Button
+              className="px-8 py-4 rounded-none h-full gradient-hero text-white font-medium"
+              onClick={handleSearch}
+            >
               <Search className="w-4 h-4 mr-2" />
               Search
             </Button>
@@ -577,6 +744,7 @@ export default function RealEstateHero() {
                           onClick={() => {
                             setSelectedLandType(type);
                             setShowLandTypeDropdown(false);
+                            setSelectedAreaRange("Any Area"); // Reset area range when land type changes
                           }}
                         >
                           {type}

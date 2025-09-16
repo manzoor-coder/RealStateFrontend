@@ -15,6 +15,7 @@ import {
   FaShare,
   FaChevronLeft,
   FaChevronRight,
+  FaBookmark,
 } from "react-icons/fa";
 import propertiesData from "@/json/properties.json";
 import { propertyApi } from "@/lib/api/property";
@@ -52,7 +53,7 @@ function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <>
-    <Card className="group hover-lift overflow-hidden pt-0 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white">
+    <Card className="group hover-lift overflow-hidden pt-0 gap-0 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white">
       <div className="relative">
         {/* <AutoImageSlider
           images={property.images}
@@ -100,9 +101,9 @@ function PropertyCard({ property }: PropertyCardProps) {
           <Button
             size="icon"
             variant="ghost"
-            className="bg-white/90 hover:bg-white text-red-500 hover:text-red-600 transition-all duration-300 shadow-lg"
+            className="bg-white/90 hover:bg-white text-green-500 hover:text-green-600 transition-all duration-300 shadow-lg"
           >
-            <FaHeart />
+            <FaBookmark />
           </Button>
         </div>
 

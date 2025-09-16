@@ -185,16 +185,18 @@ export default function PropertyViewModal({
           <div className="flex">
             {property.images?.slice(0, 3).map((img: string, index: number) => (
               <div
-                key={img}
+                key={index}
                 className="relative py-6 px-2 w-[200px] h-[200px] flex"
               >
                 {/* agar ye last 3rd image hai aur total images zyada hain */}
-                {index === 2 && property.images.length > 3 ? (
+                {index === 2 && property.images?.length > 3 ? (
                   <div className="relative w-full h-full">
-                    <img
+                    <Image
                       src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
                       alt={property.title}
                       className="w-full h-full object-cover rounded-lg"
+                      width={100}
+                      height={100}
                       onClick={() => {
                         // Open the image viewer modal with the full images array
                         openImageViewer(property);
@@ -208,14 +210,16 @@ export default function PropertyViewModal({
                         openImageViewer(property);
                       }}
                     >
-                      +{property.images.length - 3}
+                      +{property.images?.length - 3}
                     </div>
                   </div>
                 ) : (
-                  <img
+                  <Image
                     src={`${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`}
                     alt={property.title}
                     className="w-full h-full object-cover rounded-lg"
+                    width={100}
+                    height={100}
                     onClick={() => {
                       // Open the image viewer modal with the full images array
                       openImageViewer(property);
@@ -231,7 +235,7 @@ export default function PropertyViewModal({
             {/* Left Content - 3 columns */}
             <div
               className={`${
-                agent ? "xl:col-span-3" : "xl:col-span-4"
+                agent?.length < 3 ? "xl:col-span-4" : "xl:col-span-3"
               } space-y-8`}
             >
               {/* Basic Info */}
@@ -491,7 +495,7 @@ export default function PropertyViewModal({
             </div>
 
             {/* Right Sidebar - Agent Card */}
-            {agent && (
+            {agent && agent.lenght < 3 && (
               <div className="xl:col-span-1">
                 <div className="sticky top-6 space-y-6">
                   {agent?.map((agent: any, index: string) => (

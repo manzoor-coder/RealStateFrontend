@@ -26,10 +26,9 @@ export default function Page() {
   const [loading, setLoading] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [openModal, setOpenModal] = useState(false);
-  const [houseId, setHouseId] = useState<string>("");
+  const [propertiesFilter, setPropertiesFilter] = useState<Property[]>([]);
 
-  console.log("properties Data", properties);
+  console.log("filtered properties Data", properties);
 
   useEffect(() => {
     fetchProperties();
@@ -59,7 +58,9 @@ export default function Page() {
 
   return (
     <>
-    <RealEstateHero />
+    <RealEstateHero 
+    setPropertiesFilter={setProperties}
+    />
       {loading && <p className="text-center">Loading properties...</p>}
 
       <div className="w-[90%] my-10 mx-auto">
@@ -67,11 +68,11 @@ export default function Page() {
           {properties.map((property) => (
             <Card
               key={property._id}
-              className="group hover-lift py-0 overflow-hidden border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white"
+              className="group hover-lift py-0 overflow-hidden gap-0 border-0 shadow-lg hover:shadow-2xl transition-all duration-500 bg-white"
             >
               <div className="relative">
                 <AutoImageSlider
-                  images={property.images.map((img) => ({
+                  images={property?.images?.map((img) => ({
                     src: `${process.env.NEXT_PUBLIC_PICTURES_URL}${img}`,
                     alt: property.title,
                   }))}

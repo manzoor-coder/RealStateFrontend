@@ -55,6 +55,7 @@ const clients = [
 
 function ClientsPage() {
   return (
+    <DashboardLayout>
       <div className="space-y-8">
         {/* Header Section */}
         <div className="flex items-center justify-between">
@@ -165,6 +166,7 @@ function ClientsPage() {
           ))}
         </div>
       </div>
+    </DashboardLayout>
   )
 }
 

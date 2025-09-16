@@ -81,7 +81,7 @@ const sampleMessages = [
   },
 ]
 
-export function MessagesInbox() {
+export default function MessagesInbox() {
   const [messages, setMessages] = useState(sampleMessages)
   const [selectedMessage, setSelectedMessage] = useState<(typeof sampleMessages)[0] | null>(null)
   const [searchTerm, setSearchTerm] = useState("")

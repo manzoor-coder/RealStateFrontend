@@ -62,6 +62,7 @@ const appointments = [
 
 function AppointmentsPage() {
   return (
+    <DashboardLayout>
       <div className="space-y-8">
         {/* Header Section */}
         <div className="flex items-center justify-between">
@@ -161,6 +162,7 @@ function AppointmentsPage() {
           ))}
         </div>
       </div>
+    </DashboardLayout>
   )
 }
 

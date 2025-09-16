@@ -149,31 +149,39 @@ export function AddPropertyForm() {
     switch (currentStep) {
       case 1:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <Label htmlFor="title">Property Title *</Label>
+              <Label htmlFor="title" className="text-sm font-medium text-foreground">
+                Property Title *
+              </Label>
               <Input
                 id="title"
                 value={formData.title}
                 onChange={(e) => updateFormData("title", e.target.value)}
                 placeholder="e.g., Luxury Downtown Apartment"
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
             <div>
-              <Label htmlFor="description">Description</Label>
+              <Label htmlFor="description" className="text-sm font-medium text-foreground">
+                Description
+              </Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => updateFormData("description", e.target.value)}
                 placeholder="Describe your property..."
                 rows={4}
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="type">Property Type *</Label>
+                <Label htmlFor="type" className="text-sm font-medium text-foreground">
+                  Property Type *
+                </Label>
                 <Select value={formData.type} onValueChange={(value) => updateFormData("type", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -186,9 +194,11 @@ export function AddPropertyForm() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="purpose">Purpose *</Label>
+                <Label htmlFor="purpose" className="text-sm font-medium text-foreground">
+                  Purpose *
+                </Label>
                 <Select value={formData.purpose} onValueChange={(value) => updateFormData("purpose", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select purpose" />
                   </SelectTrigger>
                   <SelectContent>
@@ -199,9 +209,11 @@ export function AddPropertyForm() {
               </div>
             </div>
             <div>
-              <Label htmlFor="status">Status</Label>
+              <Label htmlFor="status" className="text-sm font-medium text-foreground">
+                Status
+              </Label>
               <Select value={formData.status} onValueChange={(value) => updateFormData("status", value)}>
-                <SelectTrigger>
+                <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -216,64 +228,82 @@ export function AddPropertyForm() {
 
       case 2:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <Label htmlFor="address">Street Address *</Label>
+              <Label htmlFor="address" className="text-sm font-medium text-foreground">
+                Street Address *
+              </Label>
               <Input
                 id="address"
                 value={formData.address}
                 onChange={(e) => updateFormData("address", e.target.value)}
                 placeholder="123 Main Street"
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="city">City *</Label>
+                <Label htmlFor="city" className="text-sm font-medium text-foreground">
+                  City *
+                </Label>
                 <Input
                   id="city"
                   value={formData.city}
                   onChange={(e) => updateFormData("city", e.target.value)}
                   placeholder="New York"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
               <div>
-                <Label htmlFor="state">State *</Label>
+                <Label htmlFor="state" className="text-sm font-medium text-foreground">
+                  State *
+                </Label>
                 <Input
                   id="state"
                   value={formData.state}
                   onChange={(e) => updateFormData("state", e.target.value)}
                   placeholder="NY"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="zipCode">ZIP Code</Label>
+                <Label htmlFor="zipCode" className="text-sm font-medium text-foreground">
+                  ZIP Code
+                </Label>
                 <Input
                   id="zipCode"
                   value={formData.zipCode}
                   onChange={(e) => updateFormData("zipCode", e.target.value)}
                   placeholder="10001"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="latitude">Latitude (Optional)</Label>
+                <Label htmlFor="latitude" className="text-sm font-medium text-foreground">
+                  Latitude (Optional)
+                </Label>
                 <Input
                   id="latitude"
                   value={formData.latitude}
                   onChange={(e) => updateFormData("latitude", e.target.value)}
                   placeholder="40.7128"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
               <div>
-                <Label htmlFor="longitude">Longitude (Optional)</Label>
+                <Label htmlFor="longitude" className="text-sm font-medium text-foreground">
+                  Longitude (Optional)
+                </Label>
                 <Input
                   id="longitude"
                   value={formData.longitude}
                   onChange={(e) => updateFormData("longitude", e.target.value)}
                   placeholder="-74.0060"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
             </div>
@@ -282,35 +312,43 @@ export function AddPropertyForm() {
 
       case 3:
         return (
-          <div className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <Label htmlFor="price">Price *</Label>
+                <Label htmlFor="price" className="text-sm font-medium text-foreground">
+                  Price *
+                </Label>
                 <Input
                   id="price"
                   value={formData.price}
                   onChange={(e) => updateFormData("price", e.target.value)}
                   placeholder={formData.purpose === "rent" ? "2500" : "750000"}
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
                 <p className="text-xs text-muted-foreground mt-1">
                   {formData.purpose === "rent" ? "Monthly rent amount" : "Sale price"}
                 </p>
               </div>
               <div>
-                <Label htmlFor="area">Area (sq ft) *</Label>
+                <Label htmlFor="area" className="text-sm font-medium text-foreground">
+                  Area (sq ft) *
+                </Label>
                 <Input
                   id="area"
                   value={formData.area}
                   onChange={(e) => updateFormData("area", e.target.value)}
                   placeholder="1200"
+                  className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
               </div>
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
-                <Label htmlFor="bedrooms">Bedrooms</Label>
+                <Label htmlFor="bedrooms" className="text-sm font-medium text-foreground">
+                  Bedrooms
+                </Label>
                 <Select value={formData.bedrooms} onValueChange={(value) => updateFormData("bedrooms", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
@@ -324,9 +362,11 @@ export function AddPropertyForm() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="bathrooms">Bathrooms</Label>
+                <Label htmlFor="bathrooms" className="text-sm font-medium text-foreground">
+                  Bathrooms
+                </Label>
                 <Select value={formData.bathrooms} onValueChange={(value) => updateFormData("bathrooms", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
@@ -341,9 +381,11 @@ export function AddPropertyForm() {
                 </Select>
               </div>
               <div>
-                <Label htmlFor="parking">Parking Spaces</Label>
+                <Label htmlFor="parking" className="text-sm font-medium text-foreground">
+                  Parking Spaces
+                </Label>
                 <Select value={formData.parking} onValueChange={(value) => updateFormData("parking", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select" />
                   </SelectTrigger>
                   <SelectContent>
@@ -362,13 +404,17 @@ export function AddPropertyForm() {
                 checked={formData.furnished}
                 onCheckedChange={(checked) => updateFormData("furnished", checked)}
               />
-              <Label htmlFor="furnished">Furnished</Label>
+              <Label htmlFor="furnished" className="text-sm font-medium text-foreground">
+                Furnished
+              </Label>
             </div>
             {formData.purpose === "rent" && (
               <div>
-                <Label htmlFor="rentPeriod">Rent Period</Label>
+                <Label htmlFor="rentPeriod" className="text-sm font-medium text-foreground">
+                  Rent Period
+                </Label>
                 <Select value={formData.rentPeriod} onValueChange={(value) => updateFormData("rentPeriod", value)}>
-                  <SelectTrigger>
+                  <SelectTrigger className="mt-2 hover-lift transition-all duration-300">
                     <SelectValue placeholder="Select period" />
                   </SelectTrigger>
                   <SelectContent>
@@ -384,18 +430,21 @@ export function AddPropertyForm() {
 
       case 4:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <Label>Select Amenities</Label>
-              <div className="grid grid-cols-2 gap-2 mt-2">
+              <Label className="text-sm font-medium text-foreground">Select Amenities</Label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
                 {defaultAmenities.map((amenity) => (
-                  <div key={amenity} className="flex items-center space-x-2">
+                  <div
+                    key={amenity}
+                    className="flex items-center space-x-3 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+                  >
                     <Checkbox
                       id={amenity}
                       checked={formData.amenities.includes(amenity)}
                       onCheckedChange={() => handleAmenityToggle(amenity)}
                     />
-                    <Label htmlFor={amenity} className="text-sm">
+                    <Label htmlFor={amenity} className="text-sm font-medium cursor-pointer">
                       {amenity}
                     </Label>
                   </div>
@@ -403,28 +452,39 @@ export function AddPropertyForm() {
               </div>
             </div>
             <div>
-              <Label htmlFor="customAmenity">Add Custom Amenity</Label>
-              <div className="flex gap-2 mt-2">
+              <Label htmlFor="customAmenity" className="text-sm font-medium text-foreground">
+                Add Custom Amenity
+              </Label>
+              <div className="flex gap-3 mt-2">
                 <Input
                   id="customAmenity"
                   value={newAmenity}
                   onChange={(e) => setNewAmenity(e.target.value)}
                   placeholder="Enter custom amenity"
                   onKeyPress={(e) => e.key === "Enter" && addCustomAmenity()}
+                  className="hover-lift transition-all duration-300 focus:shadow-gradient-blue"
                 />
-                <Button type="button" onClick={addCustomAmenity} size="sm">
+                <Button
+                  type="button"
+                  onClick={addCustomAmenity}
+                  size="sm"
+                  className="gradient-primary text-white hover-lift"
+                >
                   <Plus className="h-4 w-4" />
                 </Button>
               </div>
             </div>
             {formData.customAmenities.length > 0 && (
               <div>
-                <Label>Custom Amenities</Label>
-                <div className="flex flex-wrap gap-2 mt-2">
+                <Label className="text-sm font-medium text-foreground">Custom Amenities</Label>
+                <div className="flex flex-wrap gap-2 mt-3">
                   {formData.customAmenities.map((amenity) => (
-                    <Badge key={amenity} variant="secondary" className="gap-1">
+                    <Badge key={amenity} variant="secondary" className="gap-2 px-3 py-1 hover-lift">
                       {amenity}
-                      <X className="h-3 w-3 cursor-pointer" onClick={() => removeCustomAmenity(amenity)} />
+                      <X
+                        className="h-3 w-3 cursor-pointer hover:text-destructive"
+                        onClick={() => removeCustomAmenity(amenity)}
+                      />
                     </Badge>
                   ))}
                 </div>
@@ -435,10 +495,12 @@ export function AddPropertyForm() {
 
       case 5:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <Label htmlFor="images">Property Images</Label>
-              <div className="mt-2">
+              <Label htmlFor="images" className="text-sm font-medium text-foreground">
+                Property Images
+              </Label>
+              <div className="mt-3">
                 <input
                   type="file"
                   id="images"
@@ -449,33 +511,35 @@ export function AddPropertyForm() {
                 />
                 <label
                   htmlFor="images"
-                  className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50"
+                  className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-border rounded-lg cursor-pointer hover:bg-muted/50 hover-lift transition-all duration-300 gradient-hero text-white"
                 >
-                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                  <p className="text-sm text-muted-foreground">Click to upload images</p>
-                  <p className="text-xs text-muted-foreground">PNG, JPG up to 10MB each</p>
+                  <Upload className="h-10 w-10 mb-3" />
+                  <p className="text-lg font-medium">Click to upload images</p>
+                  <p className="text-sm opacity-90">PNG, JPG up to 10MB each</p>
                 </label>
               </div>
             </div>
             {formData.images.length > 0 && (
               <div>
-                <Label>Uploaded Images ({formData.images.length})</Label>
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-2">
+                <Label className="text-sm font-medium text-foreground">
+                  Uploaded Images ({formData.images.length})
+                </Label>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">
                   {formData.images.map((file, index) => (
-                    <div key={index} className="relative">
+                    <div key={index} className="relative group hover-lift">
                       <img
                         src={URL.createObjectURL(file) || "/placeholder.svg"}
                         alt={`Upload ${index + 1}`}
-                        className="w-full h-24 object-cover rounded-lg"
+                        className="w-full h-32 object-cover rounded-lg shadow-gradient"
                       />
                       <Button
                         type="button"
                         variant="destructive"
                         size="sm"
-                        className="absolute top-1 right-1 h-6 w-6 p-0"
+                        className="absolute top-2 right-2 h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={() => removeImage(index)}
                       >
-                        <X className="h-3 w-3" />
+                        <X className="h-4 w-4" />
                       </Button>
                     </div>
                   ))}
@@ -487,33 +551,42 @@ export function AddPropertyForm() {
 
       case 6:
         return (
-          <div className="space-y-4">
+          <div className="space-y-6 animate-fade-in">
             <div>
-              <Label htmlFor="contactName">Contact Name *</Label>
+              <Label htmlFor="contactName" className="text-sm font-medium text-foreground">
+                Contact Name *
+              </Label>
               <Input
                 id="contactName"
                 value={formData.contactName}
                 onChange={(e) => updateFormData("contactName", e.target.value)}
                 placeholder="John Doe"
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
             <div>
-              <Label htmlFor="contactEmail">Contact Email *</Label>
+              <Label htmlFor="contactEmail" className="text-sm font-medium text-foreground">
+                Contact Email *
+              </Label>
               <Input
                 id="contactEmail"
                 type="email"
                 value={formData.contactEmail}
                 onChange={(e) => updateFormData("contactEmail", e.target.value)}
                 placeholder="john@example.com"
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
             <div>
-              <Label htmlFor="contactPhone">Contact Phone *</Label>
+              <Label htmlFor="contactPhone" className="text-sm font-medium text-foreground">
+                Contact Phone *
+              </Label>
               <Input
                 id="contactPhone"
                 value={formData.contactPhone}
                 onChange={(e) => updateFormData("contactPhone", e.target.value)}
                 placeholder="+1 (555) 123-4567"
+                className="mt-2 hover-lift transition-all duration-300 focus:shadow-gradient-blue"
               />
             </div>
           </div>
@@ -525,85 +598,97 @@ export function AddPropertyForm() {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center gap-4">
-        <Link href="/properties">
-          <Button variant="ghost" size="sm">
-            <ChevronLeft className="h-4 w-4 mr-1" />
-            Back to Properties
-          </Button>
-        </Link>
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">Add New Property</h1>
-          <p className="text-muted-foreground">Fill in the details to list your property</p>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/20 to-background">
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        <div className="flex items-center gap-6 animate-fade-in">
+          <Link href="/properties">
+            <Button variant="ghost" size="sm" className="hover-lift">
+              <ChevronLeft className="h-4 w-4 mr-2" />
+              Back to Properties
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-4xl font-bold gradient-text-primary text-balance">Add New Property</h1>
+            <p className="text-muted-foreground text-lg mt-2">Fill in the details to list your property</p>
+          </div>
         </div>
-      </div>
 
-      {/* Progress Steps */}
-      <Card className="bg-card">
-        <CardContent className="p-6">
-          <div className="flex items-center justify-between">
-            {steps.map((step, index) => (
-              <div key={step.id} className="flex items-center">
-                <div
-                  className={`flex items-center justify-center w-10 h-10 rounded-full border-2 ${
-                    currentStep >= step.id
-                      ? "bg-primary border-primary text-primary-foreground"
-                      : "border-border text-muted-foreground"
-                  }`}
-                >
-                  <step.icon className="h-4 w-4" />
-                </div>
-                <div className="ml-2 hidden md:block">
-                  <p
-                    className={`text-sm font-medium ${
-                      currentStep >= step.id ? "text-foreground" : "text-muted-foreground"
+        <Card className="bg-card/80 backdrop-blur-sm shadow-gradient hover-lift animate-fade-in">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between">
+              {steps.map((step, index) => (
+                <div key={step.id} className="flex items-center">
+                  <div
+                    className={`flex items-center justify-center w-12 h-12 rounded-full border-2 transition-all duration-300 ${
+                      currentStep >= step.id
+                        ? "gradient-primary border-transparent text-white shadow-gradient-blue"
+                        : "border-border text-muted-foreground hover:border-primary/50"
                     }`}
                   >
-                    {step.title}
-                  </p>
+                    <step.icon className="h-5 w-5" />
+                  </div>
+                  <div className="ml-3 hidden md:block">
+                    <p
+                      className={`text-sm font-medium transition-colors ${
+                        currentStep >= step.id ? "text-foreground" : "text-muted-foreground"
+                      }`}
+                    >
+                      {step.title}
+                    </p>
+                  </div>
+                  {index < steps.length - 1 && (
+                    <div
+                      className={`w-16 h-1 mx-6 rounded-full transition-all duration-500 ${
+                        currentStep > step.id ? "gradient-primary" : "bg-border"
+                      }`}
+                    />
+                  )}
                 </div>
-                {index < steps.length - 1 && (
-                  <div className={`w-12 h-0.5 mx-4 ${currentStep > step.id ? "bg-primary" : "bg-border"}`} />
-                )}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
-      {/* Form Content */}
-      <Card className="bg-card">
-        <CardHeader>
-          <CardTitle className="text-card-foreground">
-            Step {currentStep}: {steps[currentStep - 1].title}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-6">{renderStepContent()}</CardContent>
-      </Card>
+        <Card className="bg-card/80 backdrop-blur-sm shadow-gradient hover-lift animate-fade-in">
+          <CardHeader className="pb-6">
+            <CardTitle className="text-2xl gradient-text-primary">
+              Step {currentStep}: {steps[currentStep - 1].title}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-8 pt-0">{renderStepContent()}</CardContent>
+        </Card>
 
-      {/* Navigation */}
-      <div className="flex justify-between">
-        <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
-          <ChevronLeft className="h-4 w-4 mr-1" />
-          Previous
-        </Button>
+        <div className="flex justify-between items-center animate-fade-in">
+          <Button
+            variant="outline"
+            onClick={prevStep}
+            disabled={currentStep === 1}
+            className="hover-lift disabled:opacity-50 disabled:cursor-not-allowed bg-transparent"
+          >
+            <ChevronLeft className="h-4 w-4 mr-2" />
+            Previous
+          </Button>
 
-        <div className="flex gap-2">
-          {currentStep === steps.length ? (
-            <>
-              <Button variant="outline" onClick={() => handleSubmit(true)}>
-                Save as Draft
+          <div className="flex gap-4">
+            {currentStep === steps.length ? (
+              <>
+                <Button variant="outline" onClick={() => handleSubmit(true)} className="hover-lift">
+                  Save as Draft
+                </Button>
+                <Button
+                  onClick={() => handleSubmit(false)}
+                  className="gradient-success text-white hover-lift shadow-gradient-teal"
+                >
+                  Publish Property
+                </Button>
+              </>
+            ) : (
+              <Button onClick={nextStep} className="gradient-primary text-white hover-lift shadow-gradient-blue">
+                Next
+                <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
-              <Button onClick={() => handleSubmit(false)}>Publish Property</Button>
-            </>
-          ) : (
-            <Button onClick={nextStep}>
-              Next
-              <ChevronRight className="h-4 w-4 ml-1" />
-            </Button>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>

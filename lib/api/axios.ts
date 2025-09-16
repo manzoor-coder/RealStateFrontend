@@ -2,14 +2,15 @@ import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3010/api';
-const token = localStorage.getItem("token")
+// const token = localStorage.getItem("token")
+//  const token = request.cookies.get("token")?.value;
 
 const client = axios.create({
     baseURL: API_BASE_URL,
     withCredentials: true,
     headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        // Authorization: `Bearer ${token}`,
     },
 });
 

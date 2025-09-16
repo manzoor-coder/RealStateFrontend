@@ -76,7 +76,7 @@ export default function Header() {
             id: "dashboard",
             label: "Dashboard",
             icon: FaTachometerAlt,
-            href: "/admin/dashboard",
+            href: "/dashboard",
             color: "text-indigo-600",
             hoverColor: "hover:bg-indigo-50 hover:text-indigo-700",
         },

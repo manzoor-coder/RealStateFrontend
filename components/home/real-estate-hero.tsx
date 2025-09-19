@@ -250,7 +250,9 @@ export default function RealEstateHero({
       city: selectedCity || undefined,
       address: locationInput || undefined,
       propertyType:
-        selectedPropertyType !== "Homes" ? selectedPropertyType : undefined,
+        selectedPropertyType && selectedPropertyType !== "Homes"
+          ? selectedPropertyType.toLowerCase()
+          : undefined,
       bedrooms:
         selectedBedrooms !== "Bedrooms"
           ? parseInt(selectedBedrooms)
@@ -307,7 +309,9 @@ export default function RealEstateHero({
       city: selectedCity || undefined,
       address: locationInput || undefined,
       propertyType:
-        selectedPropertyType !== "Homes" ? selectedPropertyType : undefined,
+        selectedPropertyType && selectedPropertyType !== "Homes"
+          ? selectedPropertyType.toLowerCase()
+          : undefined,
       bedrooms:
         selectedBedrooms !== "Bedrooms"
           ? parseInt(selectedBedrooms)
@@ -394,6 +398,11 @@ export default function RealEstateHero({
     setLocationInput("");
   };
 
+  const clearAll = () => {
+    setActiveTab("");
+    setSelectedCity("");
+  };
+
   return (
     <div
       className="relative min-h-screen bg-cover bg-center bg-no-repeat"
@@ -413,7 +422,8 @@ export default function RealEstateHero({
           {/* Buy/Rent Tabs */}
           <div className="flex">
             <Button
-              onClick={() => setActiveTab("")}
+              // onClick={() => setActiveTab("")}
+              onClick={() => clearAll()}
               className={`px-8 py-3 rounded-l-none rounded-r-none font-medium ${
                 activeTab === ""
                   ? "gradient-hero text-white hover:bg-emerald-600"
@@ -744,7 +754,7 @@ export default function RealEstateHero({
                           onClick={() => {
                             setSelectedLandType(type);
                             setShowLandTypeDropdown(false);
-                            setSelectedAreaRange("Any Area"); // Reset area range when land type changes
+                            setSelectedAreaRange("Any Area"); 
                           }}
                         >
                           {type}

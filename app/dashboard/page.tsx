@@ -42,6 +42,7 @@ export default function AdminDashboard() {
   const [userCount, setUserCount] = useState(0);
   const [propertyCount, setPropertyCount] = useState(0);
   const [propertyType, setPropertyType] = useState<Property[]>([]);
+  const [viewsData, setViewsData] = useState<any[]>([]);
   const { user } = useContext(AuthContext)!;
 
   // 1) Count occurrences of each propertyType
@@ -62,21 +63,22 @@ export default function AdminDashboard() {
 
   // console.log(propertyTypeData);
 
-  console.log("property data", propertyTypeData);
+  // console.log("property data", propertyTypeData);
 
   const hasAdminRole = user?.roles?.some((role) => role === 1);
   const hasUserRole = user?.roles?.some((role) => role === 2);
   const hasAgentRole = user?.roles?.some((role) => role === 5);
 
-  useEffect(() => {
-    fetchUsers();
-    fetchProperties();
-  }, []);
+  // useEffect(() => {
+  //   fetchUsers();
+  //   fetchProperties();
+  //   fetchViews();
+  // }, []);
 
   const fetchUsers = async () => {
     try {
       const response = await userApi.usersList();
-      console.log("User count:", response.data.users.length);
+      // console.log("User count:", response.data.users.length);
       setUserCount(response.data.users.length);
       console.log(
         "user name",
@@ -89,25 +91,53 @@ export default function AdminDashboard() {
 
 
   const fetchProperties = async () => {
-    try {
-      const response = await propertyApi.search();
-      const allProperties = response.data.properties;
+  try {
+    const response = await propertyApi.search();
+    const allProperties = response.data.properties;
 
-      let filteredProperties = allProperties;
-      if (hasUserRole) {
-         filteredProperties = allProperties.filter(
-          (property) => property.ownerId === user?.id
-        );
-      }
+    let filteredProperties = allProperties;
 
-      console.log("User Property Stats:", filteredProperties.length);
-
-      setPropertyType(filteredProperties);
-      setPropertyCount(filteredProperties.length);
-    } catch (error) {
-      console.error("Error fetching property stats:", error);
+    if (hasUserRole) {
+      filteredProperties = allProperties.filter(
+        (property) => property.ownerId === user?.id
+      );
     }
-  };
+
+    setPropertyType(filteredProperties);
+    setPropertyCount(filteredProperties.length);
+  } catch (error) {
+    console.error("Error fetching property stats:", error);
+  }
+};
+
+ const fetchViews = async () => {
+  try {
+    const res = await propertyApi.monthlyViews();
+
+    // Transform API response into desired format
+    const formatted = (res.data ?? []).map((item: { month: string; totalViews: number }) => ({
+      month: item.month,
+      views: item.totalViews,
+    }));
+
+    console.log("views getting here", formatted);
+    setViewsData(formatted);
+  } catch (err) {
+    console.error("Error fetching monthly views:", err);
+  }
+};
+
+// ✅ Run when `user` changes
+useEffect(() => {
+  if (user) {
+    fetchProperties();
+  }
+  fetchUsers();
+  fetchViews();
+}, [user]);
+
+
+
 
   const stats = [
     {
@@ -229,14 +259,14 @@ export default function AdminDashboard() {
     },
   ];
 
-  const viewsData = [
-    { month: "Jan", views: 850 },
-    { month: "Feb", views: 920 },
-    { month: "Mar", views: 1100 },
-    { month: "Apr", views: 980 },
-    { month: "May", views: 1200 },
-    { month: "Jun", views: 1247 },
-  ];
+  // const viewsData = [
+  //   { month: "Jan", views: 850 },
+  //   { month: "Feb", views: 920 },
+  //   { month: "Mar", views: 1100 },
+  //   { month: "Apr", views: 980 },
+  //   { month: "May", views: 1200 },
+  //   { month: "Jun", views: 1247 },
+  // ];
 
   const inquiriesData = [
     { month: "Jan", inquiries: 45 },

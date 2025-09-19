@@ -15,19 +15,30 @@ import {
 } from "react-icons/fa";
 import { propertyApi } from "@/lib/api/property";
 import { toast } from "react-toastify";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Property } from "@/types";
 import PropertyViewModal from "@/components/modals/PropertyViewModal";
 import PropertyDetail from "@/components/modals/PropertyDetail";
 import RealEstateHero from "@/components/home/real-estate-hero";
+import { AuthContext } from "@/contexts/AuthContext";
 
 export default function Page() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [loading, setLoading] = useState(false);
   const [viewModalOpen, setViewModalOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
-  const [propertiesFilter, setPropertiesFilter] = useState<Property[]>([]);
+   const [view, setView] = useState<{
+    propertyId: string;
+    userId: string | undefined;
+    userAgent: string;
+    viewedAt: string;
+  } | undefined>(undefined);
 
+  const {user} = useContext(AuthContext)!;
+
+  console.log("user is", user?.id)
+
+  console.log("views test", view);
   console.log("filtered properties Data", properties);
 
   useEffect(() => {
@@ -46,10 +57,25 @@ export default function Page() {
     }
   };
 
-  const handleViewProperty = (property: Property) => {
-        setSelectedProperty(property)
-        setViewModalOpen(true)
-    }
+  const handleViewProperty = async (property: Property) => {
+  const payload = {
+    propertyId: property._id,            // property being viewed
+    userId: user?.id ?? "",              // logged in user id (from auth context/store), fallback to empty string
+    userAgent: navigator.userAgent,      // browser userAgent
+    viewedAt: new Date().toISOString(),  // current timestamp
+  };
+
+  try {
+    await propertyApi.views(payload);    // send to API
+    setView(payload);                    // store in state
+    setSelectedProperty(property);       // open details
+    setViewModalOpen(true);
+    console.log("View recorded!");
+  } catch (error) {
+    console.error("Failed to record view:", error);
+  }
+};
+
 
 //     const handleViewProperty = (id: string) => {
 //     setOpenModal(true);

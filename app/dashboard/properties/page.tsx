@@ -1,4 +1,6 @@
-"use client";
+'use client';
+
+export const dynamic = 'force-dynamic';
 
 import { useContext, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";

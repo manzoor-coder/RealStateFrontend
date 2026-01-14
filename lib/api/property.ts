@@ -56,20 +56,20 @@ export const propertyApi = {
     client.post(`/property/${id}/accept-deal`, data),
 
   // 👇 Get monthly views
-  monthlyViews: () =>
-    client.get<{ views: any[] }>("/propertyviews/monthly-views"),
+  // monthlyViews: () =>
+  //   client.get<{ views: any[] }>("/propertyviews/monthly-views"),
 
   // 👇 New view endpoint
-  views: (data: {
-    propertyId: string;
-    userId: string;
-    ipAddress?: string;
-    userAgent?: string;
-    viewedAt?: string;
-  }) =>
-    client.post<{ message: string; view: any }>(
-      "/propertyviews/public-view",
-      data
-    ),
+  // views: (data: {
+  //   propertyId: string;
+  //   userId: string;
+  //   ipAddress?: string;
+  //   userAgent?: string;
+  //   viewedAt?: string;
+  // }) =>
+  //   client.post<{ message: string; view: any }>(
+  //     "/propertyviews/public-view",
+  //     data
+  //   ),
 
 };
